@@ -174,6 +174,7 @@ limitations under the License.
 	<NUnit Assemblies="@(TestAssembly)" ContinueOnError="False" OutputXmlFile="$(AssemblyBinPath)\$(AssemblyName).nunit.result.xml" /> 
   </Target>
 
+	
 
 
   <Target Name="AfterBuild">	
@@ -198,6 +199,9 @@ limitations under the License.
 			 <MakeDir Directories="$(SqlAllBinPath)" Condition="!$(IsTest) and '$(Configuration)'=='SQL2008'" />
 			<Copy Condition="!$(IsTest) and '$(Configuration)'=='SQL2008'" SourceFiles="@(MySourceFiles)" DestinationFiles="@(MySourceFiles-&gt;'$(SqlAllBinPath)\%(Filename)%(Extension)')" />
     <Copy Condition="$(IsTool) and !$(IsTest)  and '$(Configuration)'=='SQL2008'" SourceFiles="@(MySourceFiles)" DestinationFiles="@(MySourceFiles-&gt;'$(SqlToolBinPath)\%(Filename)%(Extension)')" />
+
+
+	<Warning Text="UNRESOLVED: %(MissedReference.fullpath)" Condition="'%(MissedReference.fullpath)'!=''"/>
   </Target>
 
 </Project>

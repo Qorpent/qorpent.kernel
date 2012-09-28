@@ -15,12 +15,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 -->
-<Project ToolsVersion="4.0" DefaultTargets="CreateProject" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="CreateProject;MakeReferences" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="MSBuild.Community.Tasks.Targets"/>
   <PropertyGroup>
-    <Name></Name>
+	<RefOnly>False</RefOnly>
+	<Name></Name>
 	<Package></Package>
 	<Imports></Imports>
+	<TestImports></TestImports>
     <RootNs>$(Package)</RootNs>
     <Namespace>$(RootNs).$(Name)</Namespace>
     <AssemblyName>$(RootNs).$(Name)</AssemblyName>
@@ -39,7 +41,11 @@ limitations under the License.
  
   <ItemGroup>
     <Import Include="$(Imports)" />
+	<TestImport Include="$(TestImports)" />
+	<Export Include="..\**\*.export" />
   </ItemGroup>
+  
+  
 
   <Target Name="CreateProject">
 
@@ -47,8 +53,11 @@ limitations under the License.
 	<Error Condition="!Exists('$(RootDir)')" Text="Package not exists"/>
 	<Error Condition="'$(RootNs)'==''" Text="Root namespace not defined"/>
 	<Error Condition="'$(Name)'==''" Text="Name not defined"/>
-	<Error Condition="Exists('$(ProjectDir)')" Text="Project already existed"/>
-	<Error Condition="Exists('$(TestProjectDir)')" Text="Test project already existed"/>
+	<Error Condition="!$(RefOnly) and Exists('$(ProjectDir)')" Text="Project already existed"/>
+	<Error Condition="!$(RefOnly) and Exists('$(TestProjectDir)')" Text="Test project already existed"/>
+	
+	
+	
 
     <PropertyGroup>
       <GuidGenFunction>
@@ -71,28 +80,44 @@ limitations under the License.
     <MakeDir Directories="$(TestProjectDir)"/>
     <MakeDir Directories="$(TestProjectDirProps)"/>
 
-    
-    
+
     <Message Text="Copy project and export files"/>
-    <Copy SourceFiles="$(Template)\LIBRARY.csproj" DestinationFiles="$(ProjectDir)\$(AssemblyName).csproj"/>
-    <Copy SourceFiles="$(Template)\TESTLIBRARY.csproj" DestinationFiles="$(TestProjectDir)\$(TestAssemblyName).csproj"/>
-    <Copy SourceFiles="$(Template)\LIBRARY.export" DestinationFiles="$(ProjectDir)\$(AssemblyName).export"/>
+    <Copy Condition="!$(RefOnly)" SourceFiles="$(Template)\LIBRARY.csproj" DestinationFiles="$(ProjectDir)\$(AssemblyName).csproj"/>
+    <Copy Condition="!$(RefOnly)" SourceFiles="$(Template)\TESTLIBRARY.csproj" DestinationFiles="$(TestProjectDir)\$(TestAssemblyName).csproj"/>
+    <Copy Condition="!$(RefOnly)" SourceFiles="$(Template)\LIBRARY.export" DestinationFiles="$(ProjectDir)\$(AssemblyName).export"/>
     
     <Message Text="Prepare prject files"/>
-    <FileUpdate Files="$(ProjectFile);$(ProjectExportFile)" Regex="@NAME@" ReplacementText="$(AssemblyName)" />
-    <FileUpdate Files="$(ProjectFile)" Regex="@GUID@" ReplacementText="$(GUID1)" />
-    <FileUpdate Files="$(TestProjectFile)" Regex="@GUID@" ReplacementText="$(GUID2)" />
-    <FileUpdate Files="$(TestProjectFile)" Regex="@NAME@" ReplacementText="$(TestAssemblyName)" />
-    <FileUpdate Files="$(ProjectFile);$(ProjectExportFile);$(TestProjectFile)" Regex="@NAMESPACE@" ReplacementText="$(Namespace)" />
-	<FileUpdate Files="$(ProjectFile);$(ProjectExportFile);$(TestProjectFile)" Regex="@PACKAGE@" ReplacementText="$(Package)" />
+    <FileUpdate Condition="!$(RefOnly)" Files="$(ProjectFile);$(ProjectExportFile)" Regex="@NAME@" ReplacementText="$(AssemblyName)" />
+    <FileUpdate Condition="!$(RefOnly)" Files="$(ProjectFile)" Regex="@GUID@" ReplacementText="$(GUID1)" />
+    <FileUpdate Condition="!$(RefOnly)" Files="$(TestProjectFile)" Regex="@GUID@" ReplacementText="$(GUID2)" />
+    <FileUpdate Condition="!$(RefOnly)" Files="$(TestProjectFile)" Regex="@NAME@" ReplacementText="$(TestAssemblyName)" />
+    <FileUpdate Condition="!$(RefOnly)" Files="$(ProjectFile);$(ProjectExportFile);$(TestProjectFile)" Regex="@NAMESPACE@" ReplacementText="$(Namespace)" />
+	<FileUpdate Condition="!$(RefOnly)" Files="$(ProjectFile);$(ProjectExportFile);$(TestProjectFile)" Regex="@PACKAGE@" ReplacementText="$(Package)" />
 
-    <Message Text="Import  references" />
-    <RegexReplace Input="@(Import)" Expression="(\w+)" Replacement="..\*\$1\$1.export" >
-      <Output ItemName ="ResolvedImport" TaskParameter="Output" />
-    </RegexReplace>
+	
 
-    <Copy SourceFiles="@(ResolvedImport)" DestinationFiles="$(ProjectDir)\%(ResolvedImport.Filename).import"/>
-    <Copy SourceFiles="@(ResolvedImport)" DestinationFiles="$(TestProjectDir)\%(ResolvedImport.Filename).import"/>
-
+	
   </Target>
+
+
+	
+	<Target Name="MakeReferences">
+		<Copy SourceFiles="missed._export" DestinationFiles="$(ProjectDir)\%(Import.identity).import"  Condition="'%(Import.identity)'!=''"/>
+		<Copy SourceFiles="missed._export" DestinationFiles="$(TestProjectDir)\%(TestImport.identity).import"  Condition="'%(TestImport.identity)'!=''"/>
+	
+		<Copy SourceFiles="@(Export)" DestinationFiles="$(ProjectDir)\%(Export.filename).import" Condition="Exists('$(ProjectDir)\%(Export.filename).import')" />
+		<Copy SourceFiles="stub" DestinationFiles="$(ProjectDir)\%(Export.filename).import-check" Condition="Exists('$(ProjectDir)\%(Export.filename).import')" />
+
+		<Copy SourceFiles="@(Export)" DestinationFiles="$(TestProjectDir)\%(Export.filename).import" Condition="Exists('$(TestProjectDir)\%(Export.filename).import')" />
+		<Copy SourceFiles="stub" DestinationFiles="$(TestProjectDir)\%(Export.filename).import-check" Condition="Exists('$(TestProjectDir)\%(Export.filename).import')" />
+		<CreateItem Include="$(ProjectDir)\*.import;$(TestProjectDir)\*.import" >
+			<Output TaskParameter="Include" ItemName="CreatedImport"/>
+		</CreateItem>
+		<CreateItem Include="$(ProjectDir)\*.import-check;$(TestProjectDir)\*.import-check" >
+			<Output TaskParameter="Include" ItemName="ImportCheck"/>
+		</CreateItem>
+		<Warning Text="UNRESOLVED: %(CreatedImport.fullpath)" Condition="!Exists('%(CreatedImport.fullpath)-check')"/>
+	</Target>
+
 </Project>
+	
