@@ -1,0 +1,13 @@
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<!-- it's informational manifest for @PACKAGE@ package can be used in documentation tools or in custom build/install processes -->
+	<PropertyGroup>
+		<PackageCode>@PACKAGE@</PackageCode>
+		<PackageInstallCode>@_PACKAGE@</PackageInstallCode>
+		<PackageName>@PACKAGENAME@</PackageName>
+		<PackageComment>@PACKAGECOMMENT@</PackageComment>
+		<PackageAuthor>@PACKAGEAUTHOR@</PackageAuthor>
+		<PackageLicense>@PACKAGELICENSE@</PackageLicense>
+		<PackageUrl>@PACKAGEURL@</PackageUrl>
+		<PackageAnnotation><![CDATA[@PACKAGEANNOTATION@]]></PackageAnnotation>
+	</PropertyGroup>
+</Project>

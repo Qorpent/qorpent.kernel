@@ -1,0 +1,58 @@
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="MSBuild.Community.Tasks.Targets"/>
+	<PropertyGroup Condition="'$(SrcBin)' == '' "> <!-- it means autonome launch of install ( not from installapp )-->
+		<SrcBin>..\.build\bin\all</SrcBin>	
+		<Kernel>..\qorpent.kernel</Kernel>	
+		<IsWeb Condition="'$(IsWeb)'==''">false</IsWeb>
+		<BinDir Condition="">$(AppDir)</BinDir>
+		<ConfigDir>$(AppDir)</ConfigDir>
+
+		<BinDir Condition="$(IsWeb)">$(AppDir)\bin</BinDir>
+		<ConfigDir Condition="$(IsWeb)">$(AppDir)\.config</ConfigDir>
+		<StyleDir Condition="$(IsWeb)">$(AppDir)\styles</StyleDir>
+		<ScriptDir Condition="$(IsWeb)">$(AppDir)\scripts</ScriptDir>
+		<ImageDir Condition="$(IsWeb)">$(AppDir)\images</ImageDir>
+		<RootViewDir Condition="$(IsWeb)">$(AppDir)\views</RootViewDir>
+		<UsrViewDir Condition="$(IsWeb)">$(AppDir)\usr\views</UsrViewDir>
+	</PropertyGroup>
+
+
+
+	<PropertyGroup>
+		<PackageCondition>False</PackageCondition> <!-- default value -->
+	</PropertyGroup>
+
+	<Target Name="DefaultPackageDeploy">
+		<Error ContinueOnError="false" Condition="'$(AppDir)' == ''" Text="Невозможно выполнить установку без указаной папки установки"/>
+		<Message Condition="!Exists('$(SrcBin)\%(Library.identity).dll') and '%(Library.identity)'!=''" Text="Need recompile : %(Library.identity).dll'); " Importance="high"/>
+		<MSBuild Condition="!Exists('$(SrcBin)\%(Library.identity).dll') and '%(Library.identity)'!=''" Projects="%(Library.identity)\%(Library.identity).csproj" Properties="NoProjRef=True"/>
+		<CreateItem Include="$(SrcBin)\%(Library.identity).*" ><Output TaskParameter="Include" ItemName="LibraryRef"/></CreateItem>
+		<Copy SourceFiles="@(LibraryRef)" DestinationFolder="$(BinDir)"  SkipUnchangedFiles="true"  />
+		
+		<Copy SourceFiles="@(Config)"  DestinationFolder="$(ConfigDir)"  SkipUnchangedFiles="true"  />	
+		<Copy SourceFiles="@(ReadMe)"  DestinationFolder="$(AppDir)"  SkipUnchangedFiles="true"  />	
+		
+		<Copy SourceFiles="@(SafeConfig)"  DestinationFolder="$(ConfigDir)" Condition="!Exists('$(ConfigDir)\%(SafeConfig.filename)%(SafeConfig.extension)')" />	
+		
+		<Copy SourceFiles="@(SafeRootFile)" DestinationFolder="$(AppDir)" SkipUnchangedFiles="true"  Condition="!Exists('$(AppDir)\%(SafeRootFile.filename)%(SafeRootFile.extension)') and $(IsWeb)" />
+		<Copy Condition="$(IsWeb)"  SourceFiles="@(Style)"  DestinationFolder="$(StyleDir)"  SkipUnchangedFiles="true"  />	
+		<Copy Condition="$(IsWeb)"  SourceFiles="@(Script)"  DestinationFolder="$(ScriptDir)"  SkipUnchangedFiles="true"  />	
+		<Copy Condition="$(IsWeb)"  SourceFiles="@(Image)"  DestinationFolder="$(ImageDir)"  SkipUnchangedFiles="true"  />
+		
+		<Copy Condition="$(IsWeb)"  SourceFiles="@(View)"  DestinationFolder="$(RootViewDir)\%(View.relativedir)"  SkipUnchangedFiles="true"  />
+		<Copy Condition="$(IsWeb)"  SourceFiles="@(UsrView)"  DestinationFolder="$(UsrViewDir\%(View.relativedir)"  SkipUnchangedFiles="true"  />
+		
+		<Xslt
+         Inputs="$(AppDir)\web.config;%(Handler.identity).http-handler"
+         Xsl="$(Kernel)\add-web-handler.xslt"
+         RootTag="Root"
+         Output="$(AppDir)\web.config"
+		 Condition="Exists('$(AppDir)\web.config') and $(IsWeb) and '%(Handler.identity)'!='' "
+		/>
+
+			
+
+	</Target>
+	<Target Name="AfterDefaultPackageDeploy"/>
+	<Target Name="Build" Condition="$(PackageCondition)" DependsOnTargets="DefaultPackageDeploy;AfterDefaultPackageDeploy" />
+</Project>

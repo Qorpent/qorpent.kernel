@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<root>$(MSBuildProjectDirectory)\..\..</root> <!-- assume 2-level pkg/project structure -->
+		<qptkernel>$(root)\qorpent.kernel</qptkernel>
+		<artpath>$(root)\.build</artpath>
+		<TmpPath>$(artpath)\tmp</TmpPath>
+		<BinPath>$(artpath)\bin</BinPath>
+		<SqlBinPath>$(artpath)\sqlbin</SqlBinPath>
+		<AssemblyBinPath>$(BinPath)\$(AssemblyName)</AssemblyBinPath>
+		<SqlAssemblyBinPath>$(SqlBinPath)\$(AssemblyName)</SqlAssemblyBinPath>
+		<AllBinPath>$(BinPath)\all</AllBinPath>
+		<ToolBinPath>$(BinPath)\tools</ToolBinPath>
+		<SqlAllBinPath>$(SqlBinPath)\all</SqlAllBinPath>
+		<TestBinPath>$(BinPath)\tests</TestBinPath>
+		<SqlTestBinPath>$(SqlBinPath)\tests</SqlTestBinPath>
+		<SqlToolBinPath>$(SqlBinPath)\tools</SqlToolBinPath>
+		<AllReleasePath>$(BinPath)\release</AllReleasePath>
+		<CommonsPath>$(qptkernel)</CommonsPath>
+	</PropertyGroup>
+	<Import Project="$(qptkernel)\MSBuild.Community.Tasks.Targets" />	
+	<PropertyGroup>
+		<MSBuildEmitSolution>1</MSBuildEmitSolution>
+		<OS Condition=" '$(OS)' == '' ">UNIX</OS>
+		<ApplicationIcon>$(qptkernel)\qorpent-dllicon.ico</ApplicationIcon>
+		<AssemblyOriginatorKeyFile>$(qptkernel)\qorpent.snk</AssemblyOriginatorKeyFile>
+		<SignAssembly>true</SignAssembly>
+		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+		<ProductVersion>8.0.30703</ProductVersion>
+		<SchemaVersion>2.0</SchemaVersion>
+		<FileAlignment>512</FileAlignment>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors><!-- best practice -->
+		<GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    	<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+	</PropertyGroup>
+	<PropertyGroup>
+		<!-- build version info -->
+		<MainVersion>1</MainVersion>
+		<MinorVersion>0</MinorVersion>
+		<Revision>0</Revision>
+		<BuildNumber>0</BuildNumber>
+
+		<!-- true to force .dll references in *.import files instead of project references -->
+		<NoProjRef>False</NoProjRef>
+	</PropertyGroup>
+	<PropertyGroup>		
+		<!-- test projects will be not copyed to deployment bin folder -->
+		<IsTest Condition=" '$(IsTest)' !=  'True' ">False</IsTest>
+		<TreatWarningsAsErrors Condition="$(IsTest)">false</TreatWarningsAsErrors>
+		<!-- tools project will be additionaly cio-->
+		<IsTool Condition=" '$(IsTool)' !=  'True' ">False</IsTool>
+		<RunTest>False</RunTest>
+		<AssemblyNameBase Condition=" '$(AssemblyNameBase)' == '' ">$(AssemblyName)</AssemblyNameBase>
+		<DocumentationFile Condition="!$(IsTest)">$(BinPath)\$(AssemblyName).XML</DocumentationFile>
+	</PropertyGroup>
+
+  
+  
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+	<OutputPath>$(AssemblyBinPath)</OutputPath>
+	<DefineConstants>DEBUG;TRACE;$(OS)</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>$(AllReleasePath)</OutputPath>
+    <DefineConstants>TRACE;$(OS)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  
+  
+  <PropertyGroup Condition="'$(Configuration)' == 'SQL2008'">
+	<OutputPath>$(SqlAssemblyBinPath)</OutputPath>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<DefineConstants>DEBUG;TRACE;SQL2008</DefineConstants>
+	<DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+	<ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  
+  <PropertyGroup>
+		<BaseDllName>$(OutputPath)\$(AssemblyNameBase).dll</BaseDllName>
+</PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+
+
+
+  <PropertyGroup>
+		<PackageManifestExists Condition="Exists('$(MSBuildProjectDirectory)\..\manifest')">True</PackageManifestExists>
+		<PackageManifestExists Condition="!Exists('$(MSBuildProjectDirectory)\..\manifest')">False</PackageManifestExists>
+  </PropertyGroup>
+	
+ <Import Project="$(MSBuildProjectDirectory)\..\manifest" Condition="$(PackageManifestExists)"/>
+
+  <Target Name="BeforeBuild">
+	<MakeDir Directories="$(TmpPath)" />
+	<Copy SourceFiles="$(qptkernel)\Auto_AssemblyInfo.cs" DestinationFiles="$(TmpPath)\$(AssemblyName)_VersionInfo.cs" SkipUnchangedFiles="True" />
+	<Copy SourceFiles="..\manifest" DestinationFiles="$(TmpPath)\$(PackageCode).pkg-manifest" Condition="$(PackageManifestExists)"/>
+
+	<FileUpdate Files="$(TmpPath)\$(AssemblyName)_VersionInfo.cs" Regex="@ASSEMBLYNAME@" ReplacementText="$(AssemblyName)" />
+	<FileUpdate Files="$(TmpPath)\$(AssemblyName)_VersionInfo.cs" Regex="@CONFIGURATION@" ReplacementText="$(Configuration)" />
+	<FileUpdate Files="$(TmpPath)\$(AssemblyName)_VersionInfo.cs" Regex="@VERSION@" ReplacementText="$(MainVersion).$(MinorVersion).$(Revision).$(BuildNumber)" />
+    <MakeDir Directories="$(BinPath)" />
+	<CreateItem Include="$(TmpPath)\$(AssemblyName)_VersionInfo.cs" >
+		<Output TaskParameter="Include" ItemName="Compile"/>
+	</CreateItem>
+	<CreateItem Include="..\PackageAssemblyInfo.cs" Condition="Exists('..\PackageAssemblyInfo.cs')" >
+		<Output TaskParameter="Include" ItemName="Compile"/>
+	</CreateItem>
+	<CreateItem Include="$(TmpPath)\$(PackageCode).pkg-manifest" Condition="$(PackageManifestExists)">
+		<Output TaskParameter="Include" ItemName="EmbeddedResource"/>
+	</CreateItem>
+	
+	
+  </Target>
+
+<Import Project="$(MSBuildProjectDirectory)\*.import" />
+
+
+<Choose>
+		<When Condition="$(IsTest)">
+			<ItemGroup>
+				<Reference Include="nunit.framework">
+					<SpecificVersion>False</SpecificVersion>
+					<HintPath>$(qptkernel)\nunit.framework.dll</HintPath>
+				</Reference>
+				<Reference Include="$(AssemblyNameBase)" Condition="'$(NoProjRef)'=='True' and Exists('$(BaseDllName)') ">
+					<SpecificVersion>False</SpecificVersion>
+					<HintPath>$(BaseDllName)</HintPath>
+				</Reference>	
+				<ProjectReference Include="..\$(AssemblyNameBase)\$(AssemblyNameBase).csproj"  Condition="'$(NoProjRef)'!='True' or !Exists('$(BaseDllName)') ">
+						<Name>$(AssemblyNameBase)</Name>
+				</ProjectReference>
+			</ItemGroup>
+		</When>
+	</Choose>
+	<!-- not depend on build due to MSBUILD issue on SLN compilation with advanced targets -->
+  <Target Name="Test">
+    <CreateItem Include="$(AssemblyBinPath)\*.Tests.dll">
+      <Output TaskParameter="Include" ItemName="TestAssembly" />
+    </CreateItem>
+	<NUnit Assemblies="@(TestAssembly)" ContinueOnError="False" OutputXmlFile="$(AssemblyBinPath)\$(AssemblyName).nunit.result.xml" /> 
+  </Target>
+
+
+
+  <Target Name="AfterBuild">	
+	<!-- call on such way due to MSBUILD issue on SLN compilation with advanced targets -->
+	<CallTarget Condition="$(RunTest) and $(IsTest) and '$(Configuration)'!='SQL2008'" Targets="Test" />
+	
+	<CreateItem Include="$(AssemblyBinPath)\*.*" Exclude="*.tmp" ><Output TaskParameter="Include" ItemName="MySourceFiles"/></CreateItem>
+	<Copy Condition="$(IsTest)  and '$(Configuration)'!='SQL2008'" SourceFiles="@(MySourceFiles)" DestinationFiles="@(MySourceFiles-&gt;'$(TestBinPath)\%(Filename)%(Extension)')" />
+		
+	<Copy Condition="!$(IsTest)  and '$(Configuration)'!='SQL2008'" SourceFiles="@(MySourceFiles)" DestinationFiles="@(MySourceFiles-&gt;'$(AllBinPath)\%(Filename)%(Extension)')" />
+
+    <Copy Condition="$(IsTool) and !$(IsTest)  and '$(Configuration)'!='SQL2008'" SourceFiles="@(MySourceFiles)" DestinationFiles="@(MySourceFiles-&gt;'$(ToolBinPath)\%(Filename)%(Extension)')" />
+
+
+    <CallTarget Condition="$(RunTest) and $(IsTest)  and '$(Configuration)'=='SQL2008'" Targets="Test" />
+			<ItemGroup Condition="'$(Configuration)'=='SQL2008'">
+			  <MySourceFiles Include="$(SqlAssemblyBinPath)\*.*" />
+			</ItemGroup>
+			<MakeDir Directories="$(SqlTestBinPath)" Condition="$(IsTest) and '$(Configuration)'=='SQL2008'" />
+    <MakeDir Directories="$(SqlToolBinPath)" Condition="$(IsTool) and !$(IsTest) and '$(Configuration)'=='SQL2008'" />
+			<Copy Condition="$(IsTest) and '$(Configuration)'=='SQL2008'" SourceFiles="@(MySourceFiles)" DestinationFiles="@(MySourceFiles-&gt;'$(SqlTestBinPath)\%(Filename)%(Extension)')" />
+			 <MakeDir Directories="$(SqlAllBinPath)" Condition="!$(IsTest) and '$(Configuration)'=='SQL2008'" />
+			<Copy Condition="!$(IsTest) and '$(Configuration)'=='SQL2008'" SourceFiles="@(MySourceFiles)" DestinationFiles="@(MySourceFiles-&gt;'$(SqlAllBinPath)\%(Filename)%(Extension)')" />
+    <Copy Condition="$(IsTool) and !$(IsTest)  and '$(Configuration)'=='SQL2008'" SourceFiles="@(MySourceFiles)" DestinationFiles="@(MySourceFiles-&gt;'$(SqlToolBinPath)\%(Filename)%(Extension)')" />
+  </Target>
+
+</Project>

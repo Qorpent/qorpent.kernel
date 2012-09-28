@@ -1,0 +1,95 @@
+<!--
+Copyright 2007-2012 Comdiv (F. Sadykov) - http://code.google.com/u/fagim.sadykov/
+Supported by Media Technology LTD 
+ 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+ 
+http://www.apache.org/licenses/LICENSE-2.0
+ 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+ALL MODIFICATIONS MADE TO FILE MUST BE DOCUMENTED IN VCS
+-->
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="MSBuild.Community.Tasks.Targets"/>
+	<!-- THIS SCRIPT GENERATES NEW PACKAGE IN CURRENT ROOT DIRECTORY WITH GIT(by default) REPOSITORY -->
+	<PropertyGroup>
+		<!-- user-provided options -->
+
+		<Name Condition="'$(Name)'==''"></Name>
+		<Title Condition="'$(Title)'==''">provide title</Title>
+		<Comment Condition="'$(Comment)'==''">provide comment</Comment>
+		<Annotation Condition="'$(Annotation)'==''">provide annotation</Annotation>
+		<Author Condition="'$(Author)'==''">me</Author>
+		<License Condition="'$(License)'==''">Apache 2.0</License>
+		<Url Condition="'$(Url)'==''">http://$(Name).$(Author).org</Url>
+		
+		<CreateGitRepository Condition="'$(CreateGitRepository)'==''">True</CreateGitRepository>
+		<Template Condition="'$(Template)'==''">pkg-template</Template>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<!-- internal options -->
+		<TargetDir>..\$(Name)</TargetDir>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<GitFiles Include="$(Template)\.git*" Condition="$(CreateGitRepository)" />
+		<ManifestFiles Include="$(Template)\build;$(Template)\install;$(Template)\manifest"/>
+		<ContentFiles Include="$(Template)content\*" />
+	</ItemGroup>
+	
+	<Target Name="Build" >
+	
+	
+	
+		<Error ContinueOnError="false" Text="Package name not defined (Name)" Condition="'$(Name)'==''"/>
+		<Error ContinueOnError="false" Text="Package already exists ..\$(Name)" Condition="Exists('..\$(Name)')"/>
+		<Error ContinueOnError="false" Text="Package template not exists $(Template)" Condition="!Exists('$(Template)')"/>
+		
+		
+		<RegexReplace Input="$(Name)" Expression="\." Replacement="_" Count="-1">
+		  <Output ItemName ="__Name" TaskParameter="Output" />
+		</RegexReplace>
+		
+		 <CreateProperty  Value="@(__Name)"><Output  TaskParameter="Value" PropertyName="_Name" /></CreateProperty>
+		
+		<!-- ensure target dir created GIT/directly -->
+		<CallTarget Targets="InitByGit" Condition="$(CreateGitRepository)"/>
+		<MakeDir Directories="$(TargetDir)"/>
+		
+		<Copy SourceFiles="@(ManifestFiles)" DestinationFolder="$(TargetDir)"/>
+		<Copy SourceFiles="@(ContentFiles)" DestinationFolder="$(TargetDir)"/>
+		
+		<CreateItem Include="$(TargetDir)\build;$(TargetDir)\install;$(TargetDir)\manifest" >
+			<Output TaskParameter="Include" ItemName="ResultManifest"/>
+		</CreateItem>
+		<Message Text="@(ResultManifest)" Importance="high"/>
+		<FileUpdate Files="@(ResultManifest)" Regex="@PACKAGE@" ReplacementText="$(Name)" />
+		<FileUpdate Files="@(ResultManifest)" Regex="@_PACKAGE@" ReplacementText="$(_Name)" />
+		<FileUpdate Files="@(ResultManifest)" Regex="@PACKAGENAME@" ReplacementText="$(Title)" />
+		<FileUpdate Files="@(ResultManifest)" Regex="@PACKAGEANNOTATION@" ReplacementText="$(Annotation)" />
+		<FileUpdate Files="@(ResultManifest)" Regex="@PACKAGECOMMENT@" ReplacementText="$(Comment)" />
+		<FileUpdate Files="@(ResultManifest)" Regex="@PACKAGEAUTHOR@" ReplacementText="$(Author)" />
+		<FileUpdate Files="@(ResultManifest)" Regex="@PACKAGEURL@" ReplacementText="$(Url)" />
+		<FileUpdate Files="@(ResultManifest)" Regex="@PACKAGELICENSE@" ReplacementText="$(License)" />
+		
+		<CallTarget Targets="CommitInitialGit" Condition="$(CreateGitRepository)"/>
+	</Target>
+	
+	<Target Name="InitByGit">
+		<Exec Command="cd .. &amp; git init $(Name) &amp; cd qorpent.kernel"/>
+		<Copy SourceFiles="@(GitFiles)" DestinationFolder="$(TargetDir)"/>
+	</Target>
+	
+	<Target Name="CommitInitialGit">
+		<Exec Command='cd ..\$(Name) &amp; git add --a &amp; git commit -m "initial state" &amp; cd ..\qorpent.kernel'/>
+	</Target>
+	
+</Project>
