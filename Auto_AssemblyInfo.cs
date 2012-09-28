@@ -15,11 +15,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-// Solution: Qorpent
-// Original file : IYouTrackApi.cs
-// Project: Qorpent.Integration.YouTrack
-// 
-// ALL MODIFICATIONS MADE TO FILE MUST BE DOCUMENTED IN SVN
+// ALL MODIFICATIONS MADE TO FILE MUST BE DOCUMENTED IN VCS
 
 #endregion
 using System;
