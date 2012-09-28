@@ -16,44 +16,40 @@ limitations under the License.
 
 -->
 <Project ToolsVersion="4.0" DefaultTargets="CreateProject" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\dependency\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="MSBuild.Community.Tasks.Targets"/>
   <PropertyGroup>
-    <Probe>False</Probe>
-    <Name>DEFAULT</Name>
-    <RootNs>Qorpent</RootNs>
+    <Name></Name>
+	<Package></Package>
+	<Imports></Imports>
+    <RootNs>$(Package)</RootNs>
     <Namespace>$(RootNs).$(Name)</Namespace>
     <AssemblyName>$(RootNs).$(Name)</AssemblyName>
-    <QorpentImports></QorpentImports>
-    <MainQorpentImports>Core;Utils</MainQorpentImports>
     <TestAssemblyName>$(AssemblyName).Tests</TestAssemblyName>
-	<Package Condition=" '$(Package)' == '' ">usr.tmp</Package>
-    <RootDir>..\..\$(Package)</RootDir>
+    <RootDir>..\$(Package)</RootDir>
     <ProjectDir>$(RootDir)\$(AssemblyName)</ProjectDir>
     <TestProjectDir>$(RootDir)\$(TestAssemblyName)</TestProjectDir>
     <ProjectDirProps>$(ProjectDir)\Properties</ProjectDirProps>
     <TestProjectDirProps>$(TestProjectDir)\Properties</TestProjectDirProps>
     <ProjectFile>$(ProjectDir)\$(AssemblyName).csproj</ProjectFile>
     <ProjectExportFile>$(ProjectDir)\$(AssemblyName).export</ProjectExportFile>
-    
     <TestProjectFile>$(TestProjectDir)\$(TestAssemblyName).csproj</TestProjectFile>
-    
-    <FullSolution>$(RootDir)\Qorpent.Full.sln</FullSolution>
-    <Sln>True</Sln>
-  </PropertyGroup>
-  <Choose>
-    <When Condition="'$(Name)'=='DEFAULT'">
-      <PropertyGroup>
-        <Probe>True</Probe>
-      </PropertyGroup>
-    </When>
-  </Choose>
 
+	<Template Condition="'$(Template)'==''">csproj-template</Template>
+  </PropertyGroup>
+ 
   <ItemGroup>
-    <QRefs Include="$(MainQorpentImports)" />
-    <QRefs Include="$(QorpentImports)" />
+    <Import Include="$(Imports)" />
   </ItemGroup>
 
   <Target Name="CreateProject">
+
+	<Error Condition="'$(Package)'==''" Text="Package not defined"/>
+	<Error Condition="!Exists('$(RootDir)')" Text="Package not exists"/>
+	<Error Condition="'$(RootNs)'==''" Text="Root namespace not defined"/>
+	<Error Condition="'$(Name)'==''" Text="Name not defined"/>
+	<Error Condition="Exists('$(ProjectDir)')" Text="Project already existed"/>
+	<Error Condition="Exists('$(TestProjectDir)')" Text="Test project already existed"/>
+
     <PropertyGroup>
       <GuidGenFunction>
         <![CDATA[ 
@@ -62,34 +58,26 @@ limitations under the License.
       } 
       ]]>
       </GuidGenFunction>
-
- 
     </PropertyGroup>
-
     <Script Language="C#" Code="$(GuidGenFunction)">
       <Output TaskParameter="ReturnValue" PropertyName="GUID1" />
     </Script>
     <Script Language="C#" Code="$(GuidGenFunction)">
       <Output TaskParameter="ReturnValue" PropertyName="GUID2" />
     </Script>
-
-
     <Message Text="Create folder structure"/>
 
     <MakeDir Directories="$(ProjectDir)"/>
-    <!--<MakeDir Directories="$(ProjectDirProps)"/>-->
     <MakeDir Directories="$(TestProjectDir)"/>
     <MakeDir Directories="$(TestProjectDirProps)"/>
 
     
     
     <Message Text="Copy project and export files"/>
-    <Copy SourceFiles="LIBRARY.csproj" DestinationFiles="$(ProjectDir)\$(AssemblyName).csproj"/>
-    <Copy SourceFiles="TESTLIBRARY.csproj" DestinationFiles="$(TestProjectDir)\$(TestAssemblyName).csproj"/>
-    <Copy SourceFiles="LIBRARY.export" DestinationFiles="$(ProjectDir)\$(AssemblyName).export"/>
-    <!--<Copy SourceFiles="AssemblyInfo.cs" DestinationFiles="$(ProjectDirProps)\AssemblyInfo.cs"/>
-    <Copy SourceFiles="AssemblyInfo.cs" DestinationFiles="$(TestProjectDirProps)\AssemblyInfo.cs"/>-->
-
+    <Copy SourceFiles="$(Template)\LIBRARY.csproj" DestinationFiles="$(ProjectDir)\$(AssemblyName).csproj"/>
+    <Copy SourceFiles="$(Template)\TESTLIBRARY.csproj" DestinationFiles="$(TestProjectDir)\$(TestAssemblyName).csproj"/>
+    <Copy SourceFiles="$(Template)\LIBRARY.export" DestinationFiles="$(ProjectDir)\$(AssemblyName).export"/>
+    
     <Message Text="Prepare prject files"/>
     <FileUpdate Files="$(ProjectFile);$(ProjectExportFile)" Regex="@NAME@" ReplacementText="$(AssemblyName)" />
     <FileUpdate Files="$(ProjectFile)" Regex="@GUID@" ReplacementText="$(GUID1)" />
@@ -99,12 +87,12 @@ limitations under the License.
 	<FileUpdate Files="$(ProjectFile);$(ProjectExportFile);$(TestProjectFile)" Regex="@PACKAGE@" ReplacementText="$(Package)" />
 
     <Message Text="Import  references" />
-    <RegexReplace Input="@(Qrefs)" Expression="(\w+)" Replacement="..\..\qorpent.sys\Qorpent.$1\Qorpent.$1.export" >
-      <Output ItemName ="Qref" TaskParameter="Output" />
+    <RegexReplace Input="@(Import)" Expression="(\w+)" Replacement="..\*\$1\$1.export" >
+      <Output ItemName ="ResolvedImport" TaskParameter="Output" />
     </RegexReplace>
 
-    <Copy SourceFiles="@(Qref)" DestinationFiles="$(ProjectDir)\%(Filename).import"/>
-    <Copy SourceFiles="@(Qref)" DestinationFiles="$(TestProjectDir)\%(Filename).import"/>
+    <Copy SourceFiles="@(ResolvedImport)" DestinationFiles="$(ProjectDir)\%(ResolvedImport.Filename).import"/>
+    <Copy SourceFiles="@(ResolvedImport)" DestinationFiles="$(TestProjectDir)\%(ResolvedImport.Filename).import"/>
 
   </Target>
 </Project>

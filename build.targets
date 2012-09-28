@@ -39,8 +39,8 @@ limitations under the License.
 	<PropertyGroup>
 		<MSBuildEmitSolution>1</MSBuildEmitSolution>
 		<OS Condition=" '$(OS)' == '' ">UNIX</OS>
-		<ApplicationIcon>$(qptkernel)\qorpent-dllicon.ico</ApplicationIcon>
-		<AssemblyOriginatorKeyFile>$(qptkernel)\qorpent.snk</AssemblyOriginatorKeyFile>
+		<ApplicationIcon>$(qptkernel)\default-content\qorpent-dllicon.ico</ApplicationIcon>
+		<AssemblyOriginatorKeyFile>$(qptkernel)\default-content\qorpent.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 		<ProductVersion>8.0.30703</ProductVersion>
@@ -126,7 +126,7 @@ limitations under the License.
 
   <Target Name="BeforeBuild">
 	<MakeDir Directories="$(TmpPath)" />
-	<Copy SourceFiles="$(qptkernel)\Auto_AssemblyInfo.cs" DestinationFiles="$(TmpPath)\$(AssemblyName)_VersionInfo.cs" SkipUnchangedFiles="True" />
+	<Copy SourceFiles="$(qptkernel)\default-content\Auto_AssemblyInfo.cs" DestinationFiles="$(TmpPath)\$(AssemblyName)_VersionInfo.cs" SkipUnchangedFiles="True" />
 	<Copy SourceFiles="..\manifest" DestinationFiles="$(TmpPath)\$(PackageCode).pkg-manifest" Condition="$(PackageManifestExists)"/>
 
 	<FileUpdate Files="$(TmpPath)\$(AssemblyName)_VersionInfo.cs" Regex="@ASSEMBLYNAME@" ReplacementText="$(AssemblyName)" />

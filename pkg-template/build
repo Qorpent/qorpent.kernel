@@ -60,6 +60,6 @@
 		<CreateItem Include="@(MainProject)" Condition="Exists('%(MainProject.RelativeDir)$(IgnoreBuildFileName)')" ><Output TaskParameter="Include" ItemName="IgnoredProject"/></CreateItem>
 		<CreateItem Include="@(TestProject)" Condition="Exists('%(TestProject.RelativeDir)$(IgnoreBuildFileName)')" ><Output TaskParameter="Include" ItemName="IgnoredProject"/></CreateItem>
 		<CreateItem Include="@(PostProject)" Condition="Exists('%(PostProject.RelativeDir)$(IgnoreBuildFileName)')" ><Output TaskParameter="Include" ItemName="IgnoredProject"/></CreateItem>		
-		<Warning Text="PKG: $(PackageName) PROJECT MARKED AS IGNORED: %(IgnoredProject.fullpath)" />
+		<Warning Text="PKG: $(PackageName) PROJECT MARKED AS IGNORED: %(IgnoredProject.fullpath)" Condition="'%(IgnoredProject.fullpath)'!=''" />
 	</Target>
 </Project>

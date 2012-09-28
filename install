@@ -19,7 +19,7 @@ limitations under the License.
 	<Import Project="..\qorpent.kernel\package-install.targets" />	
 	<PropertyGroup><PackageCondition>True</PackageCondition></PropertyGroup>
 	<ItemGroup>
-		<SafeRootFile Include="web.config"/> <!-- very basic web.config -->
-		<ReadMe Include="QORPENT.manifest" />
+		<SafeRootFile Include="default-content\web.config"/> <!-- very basic web.config -->
+		<ReadMe Include="default-content\QORPENT.manifest" />
 	</ItemGroup>
 </Project>
