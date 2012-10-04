@@ -18,7 +18,7 @@ limitations under the License.
 -->
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-	<Configuration>Release</Configuration>
+		<QISD Condition="'$(QISD)'==''">false</QISD>
 		<root>$(MSBuildProjectDirectory)\..\..</root> <!-- assume 2-level pkg/project structure -->
 		<qptkernel>$(root)\qorpent.kernel</qptkernel>
 		<artpath>$(root)\.build</artpath>
@@ -126,7 +126,10 @@ limitations under the License.
   </PropertyGroup>
 	
  <Import Project="$(MSBuildProjectDirectory)\..\manifest" Condition="$(PackageManifestExists)"/>
+ <PropertyGroup>
+<DefineConstants Condition="$(QISD)">$(DefineConstants);PARANOID</DefineConstants>
 
+</PropertyGroup>
   <Target Name="BeforeBuild">
 
 	<RemoveDuplicates
