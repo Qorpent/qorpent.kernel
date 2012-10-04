@@ -18,6 +18,7 @@ limitations under the License.
 -->
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
+	<Configuration>Release</Configuration>
 		<root>$(MSBuildProjectDirectory)\..\..</root> <!-- assume 2-level pkg/project structure -->
 		<qptkernel>$(root)\qorpent.kernel</qptkernel>
 		<artpath>$(root)\.build</artpath>
@@ -37,10 +38,11 @@ limitations under the License.
 	</PropertyGroup>
 	<Import Project="$(qptkernel)\MSBuild.Community.Tasks.Targets" />	
 	<PropertyGroup>
+		<SNK Condition="'$(SNK)'==''">$(qptkernel)\default-content\qorpent.snk</SNK>
 		<MSBuildEmitSolution>1</MSBuildEmitSolution>
 		<OS Condition=" '$(OS)' == '' ">UNIX</OS>
 		<ApplicationIcon>$(qptkernel)\default-content\qorpent-dllicon.ico</ApplicationIcon>
-		<AssemblyOriginatorKeyFile>$(qptkernel)\default-content\qorpent.snk</AssemblyOriginatorKeyFile>
+		<AssemblyOriginatorKeyFile>$(SNK)</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 		<ProductVersion>8.0.30703</ProductVersion>
@@ -84,12 +86,13 @@ limitations under the License.
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>$(AllReleasePath)</OutputPath>
     <DefineConstants>TRACE;$(OS)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+<DebugSymbols>false</DebugSymbols>
+<DebugType>None</DebugType>
   </PropertyGroup>
   
   
@@ -125,6 +128,13 @@ limitations under the License.
  <Import Project="$(MSBuildProjectDirectory)\..\manifest" Condition="$(PackageManifestExists)"/>
 
   <Target Name="BeforeBuild">
+
+	<RemoveDuplicates
+            Inputs="%(Compile.FullPath)">
+            <Output
+                TaskParameter="Filtered"
+                ItemName="Compile"/>
+        </RemoveDuplicates>
 	<MakeDir Directories="$(TmpPath)" />
 	<Copy SourceFiles="$(qptkernel)\default-content\Auto_AssemblyInfo.cs" DestinationFiles="$(TmpPath)\$(AssemblyName)_VersionInfo.cs" SkipUnchangedFiles="True" />
 	<Copy SourceFiles="..\manifest" DestinationFiles="$(TmpPath)\$(PackageCode).pkg-manifest" Condition="$(PackageManifestExists)"/>
@@ -181,7 +191,7 @@ limitations under the License.
 	<!-- call on such way due to MSBUILD issue on SLN compilation with advanced targets -->
 	<CallTarget Condition="$(RunTest) and $(IsTest) and '$(Configuration)'!='SQL2008'" Targets="Test" />
 	
-	<CreateItem Include="$(AssemblyBinPath)\*.*" Exclude="*.tmp" ><Output TaskParameter="Include" ItemName="MySourceFiles"/></CreateItem>
+	<CreateItem Include="$(AssemblyBinPath)\*.*" Exclude="$(AssemblyBinPath)\*.tmp" ><Output TaskParameter="Include" ItemName="MySourceFiles"/></CreateItem>
 	<Copy Condition="$(IsTest)  and '$(Configuration)'!='SQL2008'" SourceFiles="@(MySourceFiles)" DestinationFiles="@(MySourceFiles-&gt;'$(TestBinPath)\%(Filename)%(Extension)')" />
 		
 	<Copy Condition="!$(IsTest)  and '$(Configuration)'!='SQL2008'" SourceFiles="@(MySourceFiles)" DestinationFiles="@(MySourceFiles-&gt;'$(AllBinPath)\%(Filename)%(Extension)')" />

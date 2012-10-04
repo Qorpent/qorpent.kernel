@@ -10,6 +10,7 @@ tmp
 *.user
 *.dotCover
 *.suo
+*.check-import
 
 # mstest test results
 TestResults
