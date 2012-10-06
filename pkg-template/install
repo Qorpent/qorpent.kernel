@@ -29,10 +29,10 @@
 		<!-- change CustomPackageCondition to valid expression if U want provide custom way to detect 
 		package activiti in installation, by default - package is active if it's name is in 
 		project properties with =True -->
-		<CustomPackageCondition Condition="'NO'=='YES'">True</CustomCondition>
+		<CustomPackageCondition Condition="'NO'=='YES'">True</CustomPackageCondition>
 		
 		<!-- U can change main condition, but do not delete it if you use usual install.targets logic -->
-		<PackageCondition Condition="'$(@_PACKAGE@)'=='True' or '$(CustomCondition)'=='True' ">True</PackageCondition>
+		<PackageCondition Condition="'$(@_PACKAGE@)'=='True' or '$(CustomPackageCondition)'=='True' ">True</PackageCondition>
 		
 		<PackageName>@PACKAGE@</PackageName>
 	</PropertyGroup>
