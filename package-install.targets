@@ -20,8 +20,13 @@ limitations under the License.
 -->
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Import Project="MSBuild.Community.Tasks.Targets"/>
+	<PropertyGroup>
+		<Configuration Condition="'$(Configuration)'==''">Debug</Configuration>
+		<QISD Condition="'$(QISD)'==''">False</QISD>
+	</PropertyGroup>
 	<PropertyGroup Condition="'$(SrcBin)' == '' "> <!-- it means autonome launch of install ( not from installapp )-->
-		<SrcBin>..\.build\bin\all</SrcBin>	
+		<SrcBin Condition="'$(Configuration)'=='Debug'">..\.build\bin\all</SrcBin>	
+		<SrcBin Condition="'$(Configuration)'=='Release'">..\.build\bin\release</SrcBin>	
 		<Kernel>..\qorpent.kernel</Kernel>	
 		<IsWeb Condition="'$(IsWeb)'==''">false</IsWeb>
 		<BinDir Condition="">$(AppDir)</BinDir>
@@ -45,7 +50,7 @@ limitations under the License.
 	<Target Name="DefaultPackageDeploy">
 		<Error ContinueOnError="false" Condition="'$(AppDir)' == ''" Text="Невозможно выполнить установку без указаной папки установки"/>
 		<Message Condition="!Exists('$(SrcBin)\%(Library.identity).dll') and '%(Library.identity)'!=''" Text="Need recompile : %(Library.identity).dll'); " Importance="high"/>
-		<MSBuild Condition="!Exists('$(SrcBin)\%(Library.identity).dll') and '%(Library.identity)'!=''" Projects="%(Library.identity)\%(Library.identity).csproj" Properties="NoProjRef=True"/>
+		<MSBuild Condition="(!Exists('$(SrcBin)\%(Library.identity).dll') and '%(Library.identity)'!='') or $(QISD)" Projects="%(Library.identity)\%(Library.identity).csproj" Properties="NoProjRef=True"/>
 		<CreateItem Include="$(SrcBin)\%(Library.identity).*" ><Output TaskParameter="Include" ItemName="LibraryRef"/></CreateItem>
 		<Copy SourceFiles="@(LibraryRef)" DestinationFolder="$(BinDir)"  SkipUnchangedFiles="true"  />
 		

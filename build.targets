@@ -18,6 +18,7 @@ limitations under the License.
 -->
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
+		<Configuration Condition="'$(Configuration)'==''">Debug</Configuration>
 		<QISD Condition="'$(QISD)'==''">false</QISD>
 		<root>$(MSBuildProjectDirectory)\..\..</root> <!-- assume 2-level pkg/project structure -->
 		<qptkernel>$(root)\qorpent.kernel</qptkernel>
@@ -131,13 +132,7 @@ limitations under the License.
 
 </PropertyGroup>
   <Target Name="BeforeBuild">
-
-	<RemoveDuplicates
-            Inputs="%(Compile.FullPath)">
-            <Output
-                TaskParameter="Filtered"
-                ItemName="Compile"/>
-        </RemoveDuplicates>
+	
 	<MakeDir Directories="$(TmpPath)" />
 	<Copy SourceFiles="$(qptkernel)\default-content\Auto_AssemblyInfo.cs" DestinationFiles="$(TmpPath)\$(AssemblyName)_VersionInfo.cs" SkipUnchangedFiles="True" />
 	<Copy SourceFiles="..\manifest" DestinationFiles="$(TmpPath)\$(PackageCode).pkg-manifest" Condition="$(PackageManifestExists)"/>
