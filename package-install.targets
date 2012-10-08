@@ -49,8 +49,8 @@ limitations under the License.
 
 	<Target Name="DefaultPackageDeploy">
 		<Error ContinueOnError="false" Condition="'$(AppDir)' == ''" Text="Невозможно выполнить установку без указаной папки установки"/>
-		<Message Condition="!Exists('$(SrcBin)\%(Library.identity).dll') and '%(Library.identity)'!=''" Text="Need recompile : %(Library.identity).dll'); " Importance="high"/>
-		<MSBuild Condition="(!Exists('$(SrcBin)\%(Library.identity).dll') and '%(Library.identity)'!='') or $(QISD)" Projects="%(Library.identity)\%(Library.identity).csproj" Properties="NoProjRef=True"/>
+		<Error Condition="!Exists('$(SrcBin)\%(Library.identity).dll') and '%(Library.identity)'!=''" Text="Need recompile : %(Library.identity).dll'); " Importance="high" ContinueOnError="false"/>
+		<MSBuild Condition="( (!Exists('$(SrcBin)\%(Library.identity).dll') and '%(Library.identity)'!='') or $(QISD)) and Exists('%(Library.identity)\%(Library.identity).csproj')" Projects="%(Library.identity)\%(Library.identity).csproj" Properties="NoProjRef=True"/>
 		<CreateItem Include="$(SrcBin)\%(Library.identity).*" ><Output TaskParameter="Include" ItemName="LibraryRef"/></CreateItem>
 		<Copy SourceFiles="@(LibraryRef)" DestinationFolder="$(BinDir)"  SkipUnchangedFiles="true"  />
 		
