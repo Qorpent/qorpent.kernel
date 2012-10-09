@@ -31,7 +31,6 @@ limitations under the License.
 		<IsWeb Condition="'$(IsWeb)'==''">false</IsWeb>
 		<BinDir Condition="">$(AppDir)</BinDir>
 		<ConfigDir>$(AppDir)</ConfigDir>
-
 		<BinDir Condition="$(IsWeb)">$(AppDir)\bin</BinDir>
 		<ConfigDir Condition="$(IsWeb)">$(AppDir)\.config</ConfigDir>
 		<StyleDir Condition="$(IsWeb)">$(AppDir)\styles</StyleDir>
@@ -48,8 +47,15 @@ limitations under the License.
 	</PropertyGroup>
 
 	<Target Name="DefaultPackageDeploy">
+	
+
+
 		<Error ContinueOnError="false" Condition="'$(AppDir)' == ''" Text="Невозможно выполнить установку без указаной папки установки"/>
-		<Error Condition="!Exists('$(SrcBin)\%(Library.identity).dll') and '%(Library.identity)'!=''" Text="Need recompile : %(Library.identity).dll'); " Importance="high" ContinueOnError="false"/>
+		<Message Condition="!Exists('$(SrcBin)\%(Library.identity).dll') and '%(Library.identity)'!=''" Text="Need recompile : %(Library.identity).dll'); " Importance="high" ContinueOnError="true"/>
+		
+		<MSBuild Condition="'%(Package.identity)'!=''" Projects="..\%(Package.identity)\install" 
+			Properties="QISD=$(QISD);Configuration=$(Configuration);IsWeb=$(IsWeb);AppDir=$(AppDir);DirectImport=True;%(Package.Properties)"/>
+
 		<MSBuild Condition="( (!Exists('$(SrcBin)\%(Library.identity).dll') and '%(Library.identity)'!='') or $(QISD)) and Exists('%(Library.identity)\%(Library.identity).csproj')" Projects="%(Library.identity)\%(Library.identity).csproj" Properties="NoProjRef=True"/>
 		<CreateItem Include="$(SrcBin)\%(Library.identity).*" ><Output TaskParameter="Include" ItemName="LibraryRef"/></CreateItem>
 		<Copy SourceFiles="@(LibraryRef)" DestinationFolder="$(BinDir)"  SkipUnchangedFiles="true"  />
@@ -79,5 +85,5 @@ limitations under the License.
 
 	</Target>
 	<Target Name="AfterDefaultPackageDeploy"/>
-	<Target Name="Build" Condition="$(PackageCondition)" DependsOnTargets="DefaultPackageDeploy;AfterDefaultPackageDeploy" />
+	<Target Name="Build" Condition="$(PackageCondition) or '$(DirectImport)'=='True'" DependsOnTargets="DefaultPackageDeploy;AfterDefaultPackageDeploy" />
 </Project>
