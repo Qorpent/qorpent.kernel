@@ -11,6 +11,6 @@ tmp
 *.dotCover
 *.suo
 *.check-import
-
+*.import-check
 # mstest test results
 TestResults
