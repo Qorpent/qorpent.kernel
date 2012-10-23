@@ -164,11 +164,13 @@ limitations under the License.
 					<SpecificVersion>False</SpecificVersion>
 					<HintPath>$(qptkernel)\nunit.framework.dll</HintPath>
 				</Reference>
+<!--
 				<Reference Include="$(AssemblyNameBase)" Condition="'$(NoProjRef)'=='True' and Exists('$(BaseDllName)') ">
 					<SpecificVersion>False</SpecificVersion>
 					<HintPath>$(BaseDllName)</HintPath>
 				</Reference>	
-				<ProjectReference Include="..\$(AssemblyNameBase)\$(AssemblyNameBase).csproj"  Condition="'$(NoProjRef)'!='True' or !Exists('$(BaseDllName)') ">
+-->
+				<ProjectReference Include="..\$(AssemblyNameBase)\$(AssemblyNameBase).csproj" >
 						<Name>$(AssemblyNameBase)</Name>
 				</ProjectReference>
 			</ItemGroup>
