@@ -20,6 +20,7 @@ limitations under the License.
 -->
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Import Project="MSBuild.Community.Tasks.Targets"/>
+	
 	<PropertyGroup>
 		<Configuration Condition="'$(Configuration)'==''">Debug</Configuration>
 		<QISD Condition="'$(QISD)'==''">False</QISD>
@@ -29,6 +30,8 @@ limitations under the License.
 		<SrcBin Condition="'$(Configuration)'=='Release'">..\.build\bin\release</SrcBin>	
 		<Kernel>..\qorpent.kernel</Kernel>	
 		<IsWeb Condition="'$(IsWeb)'==''">false</IsWeb>
+	</PropertyGroup>
+	<PropertyGroup>
 		<BinDir Condition="">$(AppDir)</BinDir>
 		<ConfigDir>$(AppDir)</ConfigDir>
 		<BinDir Condition="$(IsWeb)">$(AppDir)\bin</BinDir>
@@ -59,13 +62,16 @@ limitations under the License.
 		<MSBuild Condition="( (!Exists('$(SrcBin)\%(Library.identity).dll') and '%(Library.identity)'!='') or $(QISD)) and Exists('%(Library.identity)\%(Library.identity).csproj')" Projects="%(Library.identity)\%(Library.identity).csproj" Properties="NoProjRef=True"/>
 		<CreateItem Include="$(SrcBin)\%(Library.identity).*" ><Output TaskParameter="Include" ItemName="LibraryRef"/></CreateItem>
 		<Copy SourceFiles="@(LibraryRef)" DestinationFolder="$(BinDir)"  SkipUnchangedFiles="true"  />
-		
+		<Message Text="Config : $(ConfigDir)" Importance="high" ContinueOnError="true"/>
 		<Copy SourceFiles="@(Config)"  DestinationFolder="$(ConfigDir)"  SkipUnchangedFiles="true"  />	
 		<Copy SourceFiles="@(ReadMe)"  DestinationFolder="$(AppDir)"  SkipUnchangedFiles="true"  />	
 		
 		<Copy SourceFiles="@(SafeConfig)"  DestinationFolder="$(ConfigDir)" Condition="!Exists('$(ConfigDir)\%(SafeConfig.filename)%(SafeConfig.extension)')" />	
 		
 		<Copy SourceFiles="@(SafeRootFile)" DestinationFolder="$(AppDir)" SkipUnchangedFiles="true"  Condition="!Exists('$(AppDir)\%(SafeRootFile.filename)%(SafeRootFile.extension)') and $(IsWeb)" />
+
+		<Copy SourceFiles="@(RootFile)" DestinationFolder="$(AppDir)" SkipUnchangedFiles="true" Condition="$(IsWeb)" />
+
 		<Copy Condition="$(IsWeb)"  SourceFiles="@(Style)"  DestinationFolder="$(StyleDir)"  SkipUnchangedFiles="true"  />	
 		<Copy Condition="$(IsWeb)"  SourceFiles="@(Script)"  DestinationFolder="$(ScriptDir)"  SkipUnchangedFiles="true"  />	
 		<Copy Condition="$(IsWeb)"  SourceFiles="@(Image)"  DestinationFolder="$(ImageDir)"  SkipUnchangedFiles="true"  />

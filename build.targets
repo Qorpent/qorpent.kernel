@@ -51,7 +51,7 @@ limitations under the License.
 		<FileAlignment>512</FileAlignment>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors><!-- best practice -->
 		<GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    	<TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    	<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
 		<ErrorReport>prompt</ErrorReport>
 		<WarningLevel>4</WarningLevel>
 	</PropertyGroup>
