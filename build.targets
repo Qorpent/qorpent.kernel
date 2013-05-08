@@ -154,7 +154,7 @@ limitations under the License.
 	
   </Target>
 
-<Import Project="$(MSBuildProjectDirectory)\*.import" />
+<Import Condition="$(OS)!='UNIX'"  Project="$(MSBuildProjectDirectory)\*.import" />
 
 
 <Choose>
