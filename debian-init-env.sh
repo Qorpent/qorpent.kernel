@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 
 REP_SERVER_IP="192.168.26.133"
 REP_SERVER_DIR="/rep"
@@ -30,15 +30,15 @@ function ConfigureAccessToRepo() {
 }
 
 function SetCredentials() {
-	CRED_FILEPATH=$(UMMC_CREDENTIALS_DIR)/UGMK_REP
+	CRED_FILEPATH=$UMMC_CREDENTIALS_DIR/UGMK_REP
 
 	if [ "$1" ] && [ "$2" ];
 	then
-		echo "username=$1" >> $(CRED_FILEPATH)
-		echo "password=$2" >> $(CRED_FILEPATH)
+		echo "username=$1" >> $CRED_FILEPATH
+		echo "password=$2" >> $CRED_FILEPATH
 	else
-		echo "username=shareMan" >> $(CRED_FILEPATH)
-		echo "password=rtf-123" >> $(CRED_FILEPATH)
+		echo "username=shareMan" >> $CRED_FILEPATH
+		echo "password=rtf-123" >> $CRED_FILEPATH
 	fi
 }
 
