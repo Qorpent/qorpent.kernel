@@ -19,9 +19,10 @@ function CreateBaseDirs() {
 }
 
 function InstallBaseApplications() {
-	apt-get install nginx
-	apt-get install git
-	apt-get install autofs
+	apt-get install -y nginx
+	apt-get install -y git
+	apt-get install -y samba
+	apt-get install -y autofs
 }
 
 function ConfigureAccessToRepo() {
