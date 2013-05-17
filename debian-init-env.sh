@@ -30,13 +30,15 @@ function ConfigureAccessToRepo() {
 }
 
 function SetCredentials() {
+	CRED_FILEPATH=$(UMMC_CREDENTIALS_DIR)/UGMK_REP
+
 	if [ "$1" ] && [ "$2" ];
 	then
-		echo "username=$1" >> $(UMMC_CREDENTIALS_DIR)/UGMK_REP
-		echo "password=$2" >> $(UMMC_CREDENTIALS_DIR)/UGMK_REP
+		echo "username=$1" >> $(CRED_FILEPATH)
+		echo "password=$2" >> $(CRED_FILEPATH)
 	else
-		echo "username=shareMan" >> $(UMMC_CREDENTIALS_DIR)/UGMK_REP
-		echo "password=rtf-123" >> $(UMMC_CREDENTIALS_DIR)/UGMK_REP
+		echo "username=shareMan" >> $(CRED_FILEPATH)
+		echo "password=rtf-123" >> $(CRED_FILEPATH)
 	fi
 }
 
@@ -48,20 +50,22 @@ function InitBaseSystem {
 }
 
 function ConfigureNginx {
-	echo "server {" >> /etc/nginx/sites-available/$(hostname).$(domainname)
-    echo "	listen  443 ssl;" >> /etc/nginx/sites-available/$(hostname).$(domainname)
-    echo "	root /usr/share/nginx/www;" >> /etc/nginx/sites-available/$(hostname).$(domainname)
-	echo "	index index.html;" >> /etc/nginx/sites-available/$(hostname).$(domainname)
-	echo "	" >> /etc/nginx/sites-available/$(hostname).$(domainname)
-	echo "	server_name             $(hostname).$(domainname);" >> /etc/nginx/sites-available/$(hostname).$(domainname)
-	echo "	ssl_certificate         /etc/nginx/ssl/ugmk-as2.ugmk.com.pem;" >> /etc/nginx/sites-available/$(hostname).$(domainname)
-	echo "	ssl_certificate_key     /etc/nginx/ssl/ugmk-as2.ugmk.com.key;" >> /etc/nginx/sites-available/$(hostname).$(domainname)
-	echo "	ssl_protocols           SSLv3 TLSv1 TLSv1.1 TLSv1.2;" >> /etc/nginx/sites-available/$(hostname).$(domainname)
-	echo "	ssl_ciphers             HIGH:!aNULL:!MD5;" >> /etc/nginx/sites-available/$(hostname).$(domainname)
-	echo "	location / {" >> /etc/nginx/sites-available/$(hostname).$(domainname)
-	echo "		try_files $uri $uri/ /index.html;" >> /etc/nginx/sites-available/$(hostname).$(domainname)
-	echo "	}" >> /etc/nginx/sites-available/$(hostname).$(domainname)
-	echo "}" >> /etc/nginx/sites-available/$(hostname).$(domainname)
+	NGINX_CONFIG_PATH=/etc/nginx/sites-available/$(hostname).$(domainname)
+
+	echo "server {" >> $(NGINX_CONFIG_PATH)
+    echo "	listen  443 ssl;" >> $(NGINX_CONFIG_PATH)
+    echo "	root /usr/share/nginx/www;" >> $(NGINX_CONFIG_PATH)
+	echo "	index index.html;" >> $(NGINX_CONFIG_PATH)
+	echo "	" >> $(NGINX_CONFIG_PATH)
+	echo "	server_name             $(hostname).$(domainname);" >> $(NGINX_CONFIG_PATH)
+	echo "	ssl_certificate         /etc/nginx/ssl/ugmk-as2.ugmk.com.pem;" >> $(NGINX_CONFIG_PATH)
+	echo "	ssl_certificate_key     /etc/nginx/ssl/ugmk-as2.ugmk.com.key;" >> $(NGINX_CONFIG_PATH)
+	echo "	ssl_protocols           SSLv3 TLSv1 TLSv1.1 TLSv1.2;" >> $(NGINX_CONFIG_PATH)
+	echo "	ssl_ciphers             HIGH:!aNULL:!MD5;" >> $(NGINX_CONFIG_PATH)
+	echo "	location / {" >> $(NGINX_CONFIG_PATH)
+	echo "		try_files $uri $uri/ /index.html;" >> $(NGINX_CONFIG_PATH)
+	echo "	}" >> $(NGINX_CONFIG_PATH)
+	echo "}" >> $(NGINX_CONFIG_PATH)
 }
 
 InitBaseSystem
