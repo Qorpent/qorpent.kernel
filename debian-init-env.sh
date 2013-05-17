@@ -30,7 +30,7 @@ function ConfigureAccessToRepo() {
 }
 
 function SetCredentials() {
-	if [ "$1" && "$2"]
+	if [ "$1" ] && [ "$2" ];
 	then
 		echo "username=$1" >> $(UMMC_CREDENTIALS_DIR)/UGMK_REP
 		echo "password=$2" >> $(UMMC_CREDENTIALS_DIR)/UGMK_REP
@@ -42,6 +42,7 @@ function SetCredentials() {
 
 function InitBaseSystem {
 	domainname ugmk.com
+	SetEnviromentVariables
 	InstallBaseApplications
 	CreateBaseDirs
 }
