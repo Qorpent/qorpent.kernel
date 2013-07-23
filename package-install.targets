@@ -51,9 +51,40 @@ limitations under the License.
 	</PropertyGroup>
 
 	<Target Name="DefaultPackageDeploy">
-	
 
 
+  <CreateItem Condition="$(IsWeb) and %(Ui.FullPath)!=''" Include="%(Ui.FullPath)\**\*.css;%(Ui.FullPath)\**\*.xslt" >
+    <Output  TaskParameter="Include" ItemName="Style"/>
+  </CreateItem>
+<CreateItem Condition="$(IsWeb) and %(Ui.FullPath)!=''" Include="%(Ui.FullPath)\**\*.js" >
+    <Output  TaskParameter="Include" ItemName="Script"/>
+  </CreateItem>
+  
+    <CreateItem Condition="$(IsWeb) and %(Ui.FullPath)!=''" Include="%(Ui.FullPath)\**\*.bxl" >
+    <Output  TaskParameter="Include" ItemName="Config"/>
+  </CreateItem>
+  
+    <CreateItem Condition="$(IsWeb) and %(Ui.FullPath)!=''" Include="%(Ui.FullPath)\**\*.tpl.html" >
+    <Output  TaskParameter="Include" ItemName="Template"/>
+  </CreateItem>
+    
+       <CreateItem Condition="$(IsWeb) and %(Ui.FullPath)!=''" Include="%(Ui.FullPath)\*.html" >
+    <Output  TaskParameter="Include" ItemName="RootFile"/>
+  </CreateItem>
+  <CreateItem Condition="$(IsWeb) and %(Ui.FullPath)!=''" Include="%(Ui.FullPath)\**\*.jpg" >
+    <Output  TaskParameter="Include" ItemName="Image"/>
+  </CreateItem>
+  <CreateItem Condition="$(IsWeb) and %(Ui.FullPath)!=''" Include="%(Ui.FullPath)\**\*.jpeg" >
+    <Output  TaskParameter="Include" ItemName="Image"/>
+  </CreateItem>
+  <CreateItem Condition="$(IsWeb) and %(Ui.FullPath)!=''" Include="%(Ui.FullPath)\**\*.png" >
+    <Output  TaskParameter="Include" ItemName="Image"/>
+  </CreateItem>
+  <CreateItem Condition="$(IsWeb) and %(Ui.FullPath)!=''" Include="%(Ui.FullPath)\**\*.gif" >
+    <Output  TaskParameter="Include" ItemName="Image"/>
+  </CreateItem>
+  
+    
 		<Error ContinueOnError="false" Condition="'$(AppDir)' == ''" Text="Невозможно выполнить установку без указаной папки установки"/>
 		<Message Condition="!Exists('$(SrcBin)\%(Library.identity).dll') and '%(Library.identity)'!=''" Text="Need recompile : %(Library.identity).dll'); " Importance="high" ContinueOnError="true"/>
 		
@@ -82,6 +113,8 @@ limitations under the License.
 		
 		<Copy Condition="$(IsWeb)"  SourceFiles="@(View)"  DestinationFolder="$(RootViewDir)\%(View.relativedir)"  SkipUnchangedFiles="true"  />
 		<Copy Condition="$(IsWeb)"  SourceFiles="@(UsrView)"  DestinationFolder="$(UsrViewDir\%(View.relativedir)"  SkipUnchangedFiles="true"  />
+    
+	
 		
 		<Xslt
          Inputs="$(AppDir)\web.config;%(Handler.identity).http-handler"
