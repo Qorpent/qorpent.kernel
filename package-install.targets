@@ -93,22 +93,21 @@ limitations under the License.
     <CreateItem  Include="..\%(Package.identity)\install" >
       <Output  TaskParameter="Include" ItemName="DoBuild"/>
     </CreateItem>
-    
-    <CreateItem Include="$(SrcBin)\%(Library.identity).*" >
-      <Output TaskParameter="Include" ItemName="LibraryRef"/>
-    </CreateItem>
-    
-    
+
+
+
+
     <Message Condition="$(QDebug)!=''" Text="%(DoBuild.identity)"/>
     <Error ContinueOnError="false" Condition="'$(AppDir)' == ''" Text="Невозможно выполнить установку без указаной папки установки"/>
     <Message Condition="$(QDebug)!='' and !Exists('$(SrcBin)\%(Library.identity).dll') and '%(Library.identity)'!=''" Text="Need recompile : %(Library.identity).dll'); " Importance="high" ContinueOnError="true"/>
-    
+
     <MSBuild Condition="Exists(%(DoBuild.identity)) " Projects="%(DoBuild.identity)"
 			Properties="QISD=$(QISD);Configuration=$(Configuration);IsWeb=$(IsWeb);AppDir=$(AppDir);DirectImport=True;%(Feature.Properties)"/>
 
     <MSBuild Condition="( (!Exists('$(SrcBin)\%(Library.identity).dll') and '%(Library.identity)'!='') or $(QISD)) and Exists('%(Library.identity)\%(Library.identity).csproj')" Projects="%(Library.identity)\%(Library.identity).csproj" Properties="NoProjRef=True"/>
-
-    <Message Text="%(LibraryRef.identity)"/>
+    <CreateItem Include="$(SrcBin)\%(Library.identity).*" >
+      <Output TaskParameter="Include" ItemName="LibraryRef"/>
+    </CreateItem>
     <Copy SourceFiles="@(LibraryRef)" DestinationFolder="$(BinDir)"  SkipUnchangedFiles="true"  />
     
     <Message  Condition="$(QDebug)!=''" Text="Config : $(ConfigDir)" Importance="high" ContinueOnError="true"/>
