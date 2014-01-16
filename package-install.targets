@@ -43,6 +43,7 @@ limitations under the License.
     <RootViewDir Condition="$(IsWeb)">$(AppDir)\views</RootViewDir>
     <UsrViewDir Condition="$(IsWeb)">$(AppDir)\usr\views</UsrViewDir>
     <TplDir Condition="$(IsWeb)">$(AppDir)\tpl</TplDir>
+	<UserFiles Condition="$(IsWeb)">$(AppDir)\usr\data</UserFiles>
   </PropertyGroup>
 
 
@@ -120,6 +121,7 @@ limitations under the License.
 
     <Copy SourceFiles="@(RootFile)" DestinationFolder="$(AppDir)" SkipUnchangedFiles="true" Condition="$(IsWeb)" />
 
+	<Copy Condition="$(IsWeb)"  SourceFiles="@(UserFile)"  DestinationFolder="$(UserFiles)"  SkipUnchangedFiles="true"  />
     <Copy Condition="$(IsWeb)"  SourceFiles="@(Style)"  DestinationFolder="$(StyleDir)"  SkipUnchangedFiles="true"  />
     <Copy Condition="$(IsWeb)"  SourceFiles="@(Script)"  DestinationFolder="$(ScriptDir)"  SkipUnchangedFiles="true"  />
     <Copy Condition="$(IsWeb)"  SourceFiles="@(Template)"  DestinationFolder="$(TplDir)"  SkipUnchangedFiles="true"  />
