@@ -1,16 +1,6 @@
-echo BSC BUILD...
-bsc build
-echo OK
-
-echo COMAPSS BUILD DEV
-compass compile
-echo OK
-
-
-echo COMAPSS BUILD PRODUCTION
-compass compile -e production
-echo OK
-
-echo JS OPTIMIZATION
-node optimize.js
-echo OK
+#!/bin/sh
+TASK=$1
+if [[ "$TASK" == "" ]]; then
+    TASK="build"
+fi
+./targets/${TASK} ${*:2}

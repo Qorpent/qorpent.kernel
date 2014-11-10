@@ -1,0 +1,15 @@
+#!/bin/sh
+echo start clean
+rm -rf .output
+rm -rf .tmp
+rm -rf ./css/*.css
+rm -rf ./css/*.map
+rm -rf ./css-src/*.css
+rm -rf npm-debug.log
+rm -rf js/*.js
+rm -rf js/*.map
+rm -rf js-src/*_api.js
+rm -rf js-src/*_types.js
+rm -rf cs/*
+rm -rf bxls/.output
+echo clean finished
