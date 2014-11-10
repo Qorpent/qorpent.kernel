@@ -1,0 +1,18 @@
+class build
+	merge-json package
+	
+	LogLevel Info
+	Extension app
+	
+	Layout PlainNamespace+IncludeWork
+	OutputDirectory ./bxls/.output
+
+	JsDir ../../js-src
+	ViewDir ../../views
+	CSharpDir ../../cs
+
+	NoControllers 		# disable it while it's not so good as it's sounds
+	NoLayouts 			# disable it while it's not so good as it's sounds
+
+	Set NO_DEFAULT_APP
+	
