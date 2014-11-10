@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 -->
-<Project ToolsVersion="4.0" DefaultTargets="CreateProject;MakeReferences" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="CreateProject" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="MSBuild.Community.Tasks.Targets"/>
   <PropertyGroup>
 	<RefOnly>False</RefOnly>
@@ -43,7 +43,7 @@ limitations under the License.
   <ItemGroup>
     <Import Include="$(Imports)" />
 	<TestImport Include="$(TestImports)" />
-	<Export Include="..\**\*.export" />
+	<!--<Export Include="..\**\*.export" /> -->
   </ItemGroup>
   
   
@@ -105,7 +105,7 @@ limitations under the License.
 	
   </Target>
 
-
+<!--
 	
 	<Target Name="MakeReferences">
 		<Copy SourceFiles="missed._export" DestinationFiles="$(ProjectDir)\%(Import.identity).import"  Condition="'%(Import.identity)'!=''"/>
@@ -124,6 +124,6 @@ limitations under the License.
 		</CreateItem>
 		<Warning Text="UNRESOLVED: %(CreatedImport.fullpath)" Condition="!Exists('%(CreatedImport.fullpath)-check')"/>
 	</Target>
-
+-->
 </Project>
 	
