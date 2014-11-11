@@ -1,0 +1,5 @@
+#!/bin/sh
+echo COMPASS BUILD DEV
+compass compile --config ./build/compass.rb
+compass compile --config ./build/compass.rb -e production
+echo OK

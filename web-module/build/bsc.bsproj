@@ -1,7 +1,7 @@
 class build
 	merge-json package
 	
-	LogLevel Info
+	LogLevel All
 	Extension app
 	
 	Layout PlainNamespace+IncludeWork

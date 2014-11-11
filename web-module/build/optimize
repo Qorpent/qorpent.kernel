@@ -1,0 +1,4 @@
+#!/bin/sh
+echo JS OPTIMIZATION
+node ./build/optimize.js
+echo OK

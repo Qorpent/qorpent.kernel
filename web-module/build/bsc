@@ -1,0 +1,4 @@
+#!/bin/sh
+echo BSC BUILD...
+bsc build  --loglevel Warning $*
+echo OK
