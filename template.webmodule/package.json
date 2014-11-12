@@ -1,10 +1,20 @@
 {
 	"description" : "My Best Module",
     "moduleName" : "my-module",
-    "defaultNamespace" : "MyModule",
+    "defaultNamespace" : "TestZeta",
 	"name" : "my-module",
     "devDependencies": {
         "requirejs": ">=2.1.15",
         "amdefine" : ">=0.1.0"
+    },
+    "compile" : {
+
+    }
+    ,
+    "tests" :[
+
+    ],
+    "webModuleDependency" :{
+
     }
 }

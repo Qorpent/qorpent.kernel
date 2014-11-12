@@ -1,6 +1,6 @@
 #!/bin/sh
-npm install -g requirejs
-npm install -g amdefine
+npm install requirejs
+npm install amdefine
 npm install -g typescript
 npm install -g phantomjs
 gem update --system

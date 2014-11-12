@@ -3,6 +3,11 @@
  */
 var requirejs = require("requirejs");
 var amdefine = require("amdefine");
+var package = require("../package.json");
+
+requirejs.define("package",[], function () {
+    return package;
+});
 requirejs(["testmap"],function($tests) {
     requirejs.config({
         baseUrl : "../tests/",
@@ -14,18 +19,6 @@ requirejs(["testmap"],function($tests) {
             "teamcity" : "../lib/teamcity",
             "angular-mocks" : "../lib/angular-mocks"
         },
-        shim: {
-            jquery: {
-                exports: "$"
-            },
-            angular: {
-                deps: ['jquery'],
-                exports: 'angular'
-            },
-            "angular-mocks": {
-                deps: ['angular']
-            }
-        },
         deps: ["mocha", "chai", "teamcity"],
         callback: function () {
             global.location = {};
@@ -33,7 +26,9 @@ requirejs(["testmap"],function($tests) {
             mocha.setup({ui:"bdd",ignoreLeaks: true,reporter: function(runner) {
                 new tc(Mocha.reporters.Base,runner);
             }});
-            requirejs ($tests,function() {
+            var profile = {node:true};
+            profile.context = process.argv.join(" ");
+            requirejs ($tests(profile),function() {
                 var chai = requirejs("chai");
                 var should = chai.Should();
                 mocha.run();
