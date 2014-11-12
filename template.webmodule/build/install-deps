@@ -1,0 +1,7 @@
+#!/bin/sh
+npm install -g requirejs
+npm install -g amdefine
+npm install -g typescript
+npm install -g phantomjs
+gem update --system
+gem install compass
