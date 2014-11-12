@@ -66,11 +66,9 @@ define(["package"],function(package) {
                }
             });
         }
-        console.log(paths);
-        console.log(result);
         require.config({
             paths: paths
         });
-        return [];
+        return result;
     }
 });

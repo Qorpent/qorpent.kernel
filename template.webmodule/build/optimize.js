@@ -73,7 +73,6 @@ if (manifest.webModuleDependency) {
     }
 }
 
-console.log(config);
 // generates module without external dependencies (due to stubModules)
 requirejs.optimize(config, function () {
 
@@ -100,7 +99,6 @@ requirejs.optimize(config, function () {
             config.paths[i] =  path;
         }
     }
-    console.log(config.paths);
     requirejs.optimize(config);
 });
 
