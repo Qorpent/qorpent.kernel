@@ -5,6 +5,7 @@ BSC=0
 OPTIMIZE=0
 TSC=0
 CLEANUP=0
+TESTS=0
 call=./build/
 REST=
 while test $# -gt 0
@@ -22,6 +23,8 @@ do
             ;;
         clean) CLEANUP=1; ALL=0;
             ;;
+        test) TESTS=1; ALL=0;
+            ;;
         -clean) CLEANUP=2
             ;;
         -compass) COMPASS=2
@@ -31,6 +34,8 @@ do
         -tsc) TSC=2
             ;;
         -optimize) OPTIMIZE=2
+            ;;
+        -test) TESTS=2
             ;;
         *) REST="$REST $1"
     esac
@@ -55,4 +60,8 @@ fi
 
 if ( [ "$ALL" == 1 ] && [ "$OPTIMIZE" != 2 ] ) || [ "$OPTIMIZE" == 1 ]; then
 	${call}optimize ${REST}
+fi
+
+if ( [ "$ALL" == 1 ] && [ "$TESTS" != 2 ] ) || [ "$TESTS" == 1 ]; then
+	${call}test ${REST}
 fi
