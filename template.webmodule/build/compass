@@ -1,5 +1,5 @@
 #!/bin/sh
-if [ -f ./**/*.scss ]; then
+if [[ -n $( find ./src/css -name \*.scss ) ]]; then
     echo COMPASS BUILD DEV
     compass compile --config ./build/compass.rb
     compass compile --config ./build/compass.rb -e production

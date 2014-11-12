@@ -1,10 +1,10 @@
 var manifest = require('./../package');
 var requirejs = require('requirejs');
 var config = {
-    baseUrl:'./js-src',
+    baseUrl:'./src/js',
     paths : {},
     name:manifest.moduleName,
-    out:'./js/'+manifest.moduleName+'-min.js',
+    out:'./dist/js/'+manifest.moduleName+'.js',
     wrap: {
         end: "define(['"+manifest.moduleName+"'],function(_){return _;});"
     },
@@ -12,5 +12,5 @@ var config = {
     preserveLicenseComments:false,
     optimize:"uglify2"
 };
-config.paths[manifest.moduleName] = "main";
+config.paths[manifest.moduleName] = "../../build/main";
 requirejs.optimize(config);

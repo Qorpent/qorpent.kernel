@@ -1,5 +1,5 @@
 #!/bin/sh
-if [ -f ./**/*.bxls ]; then
+if [[ -n $( find ./src/bxls -name \*.bxls ) ]]; then
     echo BSC BUILD...
     bsc build  --loglevel Warning $*
     echo OK

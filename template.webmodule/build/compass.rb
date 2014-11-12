@@ -7,12 +7,11 @@ require 'compass/import-once/activate'
 
 # Set this to the root of your project when deployed:
 http_path = "/"
-css_dir = (environment == :production) ? "css" : "css-src"
-sass_dir = "scss"
-images_dir =  "img"
-fonts_dir = "fonts"
-javascripts_dir = (environment == :production) ? "js" : "js-src"
-
+css_dir = (environment == :production) ? "src/css" : "dist/css"
+sass_dir = "./src/css"
+images_dir =  "./dist/img"
+fonts_dir = "./dist/fonts"
+javascripts_dir = "./dist/js"
 http_images_dir = "img"
 http_fonts_dir = "fonts"
 http_stylesheets_path = "/css"

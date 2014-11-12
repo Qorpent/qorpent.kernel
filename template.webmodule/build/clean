@@ -2,22 +2,21 @@
 echo start clean
 rm -rf .output
 rm -rf .tmp
-rm -rf ./css/*.css
-rm -rf ./css/**/*.css
-rm -rf ./css/*.map
-rm -rf ./css/**/*.map
-rm -rf ./css-src/*.css
-rm -rf ./css-src/**/*.css
+rm -rf ./dist/css/*.css
+rm -rf ./dist/css/**/*.css
+rm -rf ./dist/css/*.map
+rm -rf ./dist/css/**/*.map
 rm -rf npm-debug.log
-rm -rf js/*.js
-rm -rf js/*.map
-rm -rf js-src/*_api.js
-rm -rf js-src/*_types.js
-rm -rf cs/*
-rm -rf bxls/.output
-for f in js-src/*.ts js-src/**/*.ts; do
-    if echo $f | grep -E '^[^\\*]+$' > /dev/null; then
-        rm -rf ${f%%.*}.js*
-    fi
+rm -rf ./dist/js/*.js
+rm -rf ./dist/js/*.map
+rm -rf ./src/js/*_types.js
+rm -rf ./src/js/*_api.js
+rm -rf src/cs/auto
+rm -rf src/bxls/.output
+for f in $(find ./src/js -name *.ts); do
+    rm -rf ${f%.*}.js*
+done
+for f in $(find ./src/css -name *.scss); do
+    rm -rf ${f%.*}.css*
 done
 echo clean finished
