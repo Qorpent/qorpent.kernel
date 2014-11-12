@@ -16,6 +16,8 @@ rm -rf js-src/*_types.js
 rm -rf cs/*
 rm -rf bxls/.output
 for f in js-src/*.ts js-src/**/*.ts; do
-    rm -rf ${f%%.*}.js*
+    if echo $f | grep -E '^[^\\*]+$' > /dev/null; then
+        rm -rf ${f%%.*}.js*
+    fi
 done
 echo clean finished

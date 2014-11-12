@@ -1,4 +1,8 @@
 #!/bin/sh
-echo BUILD TSC
-tsc --sourceMap --module amd js-src/**/*.ts js-src/*.ts
-echo OK
+if [ -f ./**/*.ts ]; then
+    echo BUILD TSC
+    tsc --sourceMap --module amd js-src/**/*.ts js-src/*.ts
+    echo OK
+else
+    echo NO TypeScript TO COMPILE
+fi

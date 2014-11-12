@@ -1,4 +1,8 @@
 #!/bin/sh
-echo BSC BUILD...
-bsc build  --loglevel Warning $*
-echo OK
+if [ -f ./**/*.bxls ]; then
+    echo BSC BUILD...
+    bsc build  --loglevel Warning $*
+    echo OK
+else
+    echo NO BXLS files to compile
+fi
