@@ -1,7 +1,7 @@
 var manifest = require('./../package');
 var requirejs = require('requirejs');
 var reposRoot = "../../../../"; //path to match repository root
-
+var fs = require("fs");
 var config = {
     baseUrl: './src/js',
     paths: {},
@@ -61,7 +61,7 @@ if (!!manifest.compile){
     }
     if(!!manifest.compile.include){
         manifest.compile.include.forEach(function(_){
-           config.include.push(_);
+            config.include.push(_);
         });
     }
 }
@@ -72,6 +72,16 @@ if (manifest.webModuleDependency) {
         config.paths[i] = "empty:";
     }
 }
+
+var libs = fs.readdirSync("lib");
+libs.forEach(function(_){
+    if(_.match(/\.js$/)){
+        var name = _.replace(/\.js$/,'');
+        if (!(name in config.paths)){
+            config.paths[name] = "empty:";
+        }
+    }
+});
 
 // generates module without external dependencies (due to stubModules)
 requirejs.optimize(config, function () {
@@ -99,6 +109,7 @@ requirejs.optimize(config, function () {
             config.paths[i] =  path;
         }
     }
+
     requirejs.optimize(config);
 });
 
