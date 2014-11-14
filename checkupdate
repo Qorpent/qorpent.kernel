@@ -1,0 +1,47 @@
+GetUpdates () {
+     #repository
+     repos=$1
+     #branch
+     branch=$2
+     #result value
+     _check_update=0
+
+     # repository must be set
+     if [ "${repos}" = "" ]; then
+          echo "repository must be set"
+          return -1
+     fi   
+
+     # enter repository
+     cd ${repos}
+     echo "enter ${repos}"
+
+     # if no branch set with argument takes current
+     if [ "${branch}" = "" ]; then
+          branch=$(git rev-parse --abbrev-ref HEAD)
+     fi
+     echo "branch to update ${branch}"
+
+     #take current revision
+     current=$(git rev-parse HEAD)
+     echo "current ${current}"
+ 
+     # reset and upgrade repository
+     git reset --hard
+     git clean -f
+     git fetch origin
+     git merge -Xtheirs origin/${branch}
+     cd ..
+ 
+     #check new revision
+     updated=$(git rev-parse HEAD)
+     echo "checked ${current}"
+     if [ "${current}" != "${updated}" ]; then
+          echo "updated ${repos}"
+          return 1
+     else
+          echo "not updated"
+          return 0
+     fi    
+}
+
