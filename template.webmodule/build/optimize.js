@@ -16,6 +16,8 @@ var config = {
     optimize: "uglify2"
 };
 
+
+
 config.paths = config.paths || {};
 config.paths[manifest.moduleName] = "../../build/main";
 
@@ -110,6 +112,10 @@ requirejs.optimize(config, function () {
         }
     }
 
-    requirejs.optimize(config);
+    requirejs.optimize(config,function(){
+        if(!!manifest.optimizer){
+            requirejs.optimize(manifest.optimizer);
+        }
+    });
 });
 
