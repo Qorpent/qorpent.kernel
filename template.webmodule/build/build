@@ -1,4 +1,5 @@
 #!/bin/sh
+./build/hooks/prebuild
 ALL=1
 COMPASS=0
 BSC=0
