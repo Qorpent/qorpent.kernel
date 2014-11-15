@@ -10,6 +10,7 @@ for f in  $( find . -type d -maxdepth 2 -name *webmodule | grep -vE template.web
 	name=${f#*/}
 	name=${name%.webmodule}
 	echo $name
+	cp $root/Qorpent.Kernel/template.webmodule/build/update  ./build
 	./make.sh update
 	cd $root
 done
