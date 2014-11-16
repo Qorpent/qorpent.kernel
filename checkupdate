@@ -20,7 +20,7 @@ GetUpdates () {
      if [ "${branch}" = "" ]; then
           branch=$(git rev-parse --abbrev-ref HEAD)
      fi
-     echo "branch to update ${branch}"
+     echo "branch to update '${branch}'"
 
      #take current revision
      current=$(git rev-parse HEAD)
@@ -31,10 +31,11 @@ GetUpdates () {
      git clean -f
      git fetch origin
      git merge -Xtheirs origin/${branch}
+     updated=$(git rev-parse HEAD)
      cd ..
  
      #check new revision
-     updated=$(git rev-parse HEAD)
+     
      echo "checked ${current}"
      if [ "${current}" != "${updated}" ]; then
           echo "updated ${repos}"
