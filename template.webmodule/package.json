@@ -17,6 +17,11 @@
     "webModuleDependency" :{
 
     },
+    "defines":{
+      "DEBUG":true,
+      "PROFILE":true
+    },
+
     "__optimizer" :{
 
     },
