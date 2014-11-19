@@ -1,8 +1,12 @@
 #!/bin/sh
 this=$(pwd)
 target=$1/$2.webmodule
+cd ${target}
+target=$(pwd)
+cd $this
+cd ./Qorpent.Kernel/template.webmodule
 make.sh clean
-mkdir $target
+mkdir $target 2>/dev/null
 cp -rf . $target
 cd $target
 rm -rf .idea
