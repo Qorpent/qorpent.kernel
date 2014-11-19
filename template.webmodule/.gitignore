@@ -4,3 +4,6 @@ npm-debug.log
 .output
 .tmp
 .idea
+
+/build/*
+/lib/*
