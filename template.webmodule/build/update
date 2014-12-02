@@ -4,7 +4,7 @@ mkdir  ./tests 2>/dev/null
 mkdir  ./build 2>/dev/null
 mkdir  ./lib 2>/dev/null
 
-cp -f ../../Qorpent.Kernel/template.webmodule/build/* ./build 2>/dev/null
+cp -rf ../../Qorpent.Kernel/template.webmodule/build/* ./build 2>/dev/null
 cp -f ../../Qorpent.Kernel/template.webmodule/lib/* ./lib 2>/dev/null
 
 for f in ../../Qorpent.Kernel/template.webmodule/hooks/*; do
