@@ -92,6 +92,8 @@ if (manifest.webModuleDependency) {
     }
 }
 
+config.paths["_plugins"] = "empty:";
+config.stubModules = ["_plugins"];
 var libs = fs.readdirSync("lib");
 libs.forEach(function(_){
     if(_.match(/\.js$/)){
