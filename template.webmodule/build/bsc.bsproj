@@ -17,4 +17,5 @@ class build
 
 	Set NO_DEFAULT_APP
 
-	
+	Exclude
+    	Path dist
