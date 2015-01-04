@@ -1,4 +1,4 @@
-#require ../hooks/*.bsproj
+require ../hooks/*.bsproj
 class build
 	merge-json package
 	
