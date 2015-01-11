@@ -1,4 +1,4 @@
-#require ../hooks/*.bsproj
+require ../hooks/*.bsproj
 class build
 	merge-json package
 	
@@ -17,4 +17,5 @@ class build
 
 	Set NO_DEFAULT_APP
 
-	
+	Exclude
+    	Path dist
