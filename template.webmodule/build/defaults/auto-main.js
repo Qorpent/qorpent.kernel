@@ -8,8 +8,30 @@ var useTotalLeaflet = false; //set to true if module uses TOTALLEAFLET
 var useUiBootstrap = false; //set to true if module uses UIBOOTSTRAP
 
 
+
+
 if (!myModule) {
     myModule = document.location.href.match(/\/([^\/]+)\.html/)[1];
+}
+
+
+var myScript = document.querySelector('head script[data-main]');
+if (myScript) {
+    var myUrl = myScript.getAttribute("data-main");
+
+    if (myUrl) {
+        var ver = myUrl.match(/\?(.+)$/);
+        if (ver) {
+            require.config({
+                urlArgs: ver[1]
+            });
+        }
+    }
+
+    var mod = myScript.getAttribute("module");
+    if(mod){
+        myModule = mod;
+    }
 }
 
 if(document.location.href.match("noplugins")){
@@ -31,20 +53,7 @@ if (document.location.href.match(/src/)) {
     main = myModule;
     base = "../src/js";
 }
-var myScript = document.querySelector('head script[data-main]');
-window._ver = 0;
-if (myScript) {
-    var myUrl = myScript.getAttribute("data-main");
-    if (myUrl) {
-        var ver = myUrl.match(/\?(.+)$/);
-        if (ver) {
-            window._ver = ver[1];
-            require.config({
-                urlArgs: ver[1]
-            });
-        }
-    }
-}
+
 var config = {
     baseUrl: base,
     paths: {
