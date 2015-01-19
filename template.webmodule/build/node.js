@@ -2,7 +2,6 @@
  * Created by comdiv on 12.11.2014.
  */
 var requirejs = require("requirejs");
-var amdefine = require("amdefine");
 var package = require("../package.json");
 
 requirejs.define("package",[], function () {
@@ -15,11 +14,12 @@ requirejs(["testmap"],function($tests) {
         paths: {
             "mocha" :"../lib/mocha",
             "chai" :"../lib/chai",
+            "moment" :"../lib/moment",
             "angular" : "../lib/angular",
             "teamcity" : "../lib/teamcity",
             "angular-mocks" : "../lib/angular-mocks"
         },
-        deps: ["mocha", "chai", "teamcity"],
+        deps: ["mocha", "chai", "teamcity","moment"],
         callback: function () {
             global.location = {};
             var tc =requirejs("teamcity");
@@ -29,8 +29,6 @@ requirejs(["testmap"],function($tests) {
             var profile = {node:true};
             profile.context = process.argv.join(" ");
             requirejs ($tests(profile),function() {
-                var chai = requirejs("chai");
-                var should = chai.Should();
                 mocha.run();
             });
         }
