@@ -39,7 +39,7 @@ define(["package"],function(package) {
                     name = v.substring(1);
                 }
                 else {
-                    path = "../dist/js/" + package.moduleName + "-full";
+                    path = "../dist/js/" + package.moduleName;
                 }
             }else{
                 path = v;

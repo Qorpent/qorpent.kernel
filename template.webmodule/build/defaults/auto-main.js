@@ -1,4 +1,5 @@
 /**
+/**
  * Created by comdiv on 17.11.2014.
  */
 var myModule = ""; // set module manually if automatic response from HREF is not valid
@@ -44,7 +45,7 @@ if(document.location.href.match("noplugins")){
     });
 }
 
-var main = myModule + "-full";
+var main = myModule;
 var base = "./js";
 if (document.location.href.match(/debug/)) {
     main = myModule;

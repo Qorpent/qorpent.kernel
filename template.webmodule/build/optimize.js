@@ -106,35 +106,41 @@ libs.forEach(function(_){
 
 // generates module without external dependencies (due to stubModules)
 requirejs.optimize(config, function () {
-
-    //NEXT GENERATION
-    //generate full version with all modules bundled - usefull for standalone usage and browser testing
-    config.out = config.out.replace(/\.js$/, '-full.js');
-    // setup module dependency
-    if (manifest.webModuleDependency) {
-        for (var i in manifest.webModuleDependency) {
-            var path = manifest.webModuleDependency[i];
-            // если путь не является обычным путем к файлу (полным или относительным)
-            if(!path.match(/^((\/)|(\w\:\/)|(\.))/)){
-                //если путь включает в себя ссылку на файл
-                if(path.match(/[^!?](\!)|(\?)[\w\-\d]+$/)){
-                    path = path.replace(/\!/,'.webmodule/dist/js/');
-                    path = path.replace(/\?/,'.webmodule/src/js/');
-                }else if (path.match(/^\!/)) { //нестандартный путь от репозитория, без веб-модулей
-                    path = path.substring(1);
-                } else { // путь к файлу по умолчанию
-                    path = path.replace(/([^\/]+)$/,'$1.webmodule/dist/js/$1');
+    if(!!manifest.__optimizer && !!manifest.__optimizer.makeFull) {
+        //NEXT GENERATION
+        //generate full version with all modules bundled - usefull for standalone usage and browser testing
+        config.out = config.out.replace(/\.js$/, '-full.js');
+        // setup module dependency
+        if (manifest.webModuleDependency) {
+            for (var i in manifest.webModuleDependency) {
+                var path = manifest.webModuleDependency[i];
+                // если путь не является обычным путем к файлу (полным или относительным)
+                if (!path.match(/^((\/)|(\w\:\/)|(\.))/)) {
+                    //если путь включает в себя ссылку на файл
+                    if (path.match(/[^!?](\!)|(\?)[\w\-\d]+$/)) {
+                        path = path.replace(/\!/, '.webmodule/dist/js/');
+                        path = path.replace(/\?/, '.webmodule/src/js/');
+                    } else if (path.match(/^\!/)) { //нестандартный путь от репозитория, без веб-модулей
+                        path = path.substring(1);
+                    } else { // путь к файлу по умолчанию
+                        path = path.replace(/([^\/]+)$/, '$1.webmodule/dist/js/$1');
+                    }
+                    path = reposRoot + path;
                 }
-                path = reposRoot+path;
+                config.paths[i] = path;
             }
-            config.paths[i] =  path;
+        }
+        requirejs.optimize(config, function () {
+            if (!!manifest.optimizer) {
+                requirejs.optimize(manifest.optimizer);
+            }
+        });
+    }else{
+        if (!!manifest.optimizer) {
+            requirejs.optimize(manifest.optimizer);
         }
     }
 
-    requirejs.optimize(config,function(){
-        if(!!manifest.optimizer){
-            requirejs.optimize(manifest.optimizer);
-        }
-    });
 });
+
 
