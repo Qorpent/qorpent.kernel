@@ -16,19 +16,15 @@ if (!myModule) {
 }
 
 
+var ver = document.querySelector('html').getAttribute("ui-version") || "0.1";
+require.config({
+    urlArgs: ver
+});
+if (!myModule) {
+    myModule = document.location.href.match(/\/([^\/]+)\.html/)[1];
+}
 var myScript = document.querySelector('head script[data-main]');
 if (myScript) {
-    var myUrl = myScript.getAttribute("data-main");
-
-    if (myUrl) {
-        var ver = myUrl.match(/\?(.+)$/);
-        if (ver) {
-            require.config({
-                urlArgs: ver[1]
-            });
-        }
-    }
-
     var mod = myScript.getAttribute("module");
     if(mod){
         myModule = mod;
