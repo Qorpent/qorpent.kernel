@@ -79,9 +79,14 @@ var config = {
 		if(useScalyr){
 			 deps.push("sly");
 		}
+        if(useReact){
+            require(["react"],function(r){
+                window.React = r;
+            });
+        }
 		
         // bind additional Angular modules for bootstrap here
-        angular.bootstrap(document.body, deps);
+        angular.bootstrap(document, deps);
     }
 };
 config.paths[myModule] = main;

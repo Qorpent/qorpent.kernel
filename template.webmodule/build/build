@@ -69,3 +69,5 @@ if ( [ "$ALL" == 1 ] && [ "$TESTS" != 2 ] ) || [ "$TESTS" == 1 ]; then
 fi
 
 ./hooks/afterbuild ${args}
+
+cp ./lib/*.js ./dist/js
