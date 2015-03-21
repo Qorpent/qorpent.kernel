@@ -73,7 +73,7 @@ var config = {
     }
 };
 config.paths[myModule] = main;
-config.shim[myModule] = {deps: []};
+config.shim[myModule] = {deps: ["angular"]};
 
 
 if (useUiBootstrap || useThe) {
