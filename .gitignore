@@ -13,3 +13,18 @@ tmp
 
 # mstest test results
 TestResults
+/template.webmodule/dist/js/angular-mocks.js
+/template.webmodule/dist/js/angular.js
+/template.webmodule/dist/js/bindonce.js
+/template.webmodule/dist/js/chai.js
+/template.webmodule/dist/js/jquery.js
+/template.webmodule/dist/js/mocha.js
+/template.webmodule/dist/js/moment.js
+/template.webmodule/dist/js/react.js
+/template.webmodule/dist/js/require.js
+/template.webmodule/dist/js/scalyr.js
+/template.webmodule/dist/js/teamcity.js
+/template.webmodule/dist/js/text.js
+/template.webmodule/dist/js/textAngular-sanitize.js
+/template.webmodule/dist/js/textAngular.js
+/template.webmodule/dist/js/ui-bootstrap.js
