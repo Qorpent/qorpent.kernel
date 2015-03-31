@@ -49,7 +49,7 @@ limitations under the License.
 		<ProductVersion>8.0.30703</ProductVersion>
 		<SchemaVersion>2.0</SchemaVersion>
 		<FileAlignment>512</FileAlignment>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors><!-- best practice -->
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 		<GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     	<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
 		<ErrorReport>prompt</ErrorReport>
