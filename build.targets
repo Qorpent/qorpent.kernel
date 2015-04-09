@@ -151,7 +151,7 @@ limitations under the License.
 		<Output TaskParameter="Include" ItemName="EmbeddedResource"/>
 	</CreateItem>
 	
-	
+	  
   </Target>
 
 <Import Condition="$(OS)!='UNIX'"  Project="$(MSBuildProjectDirectory)\*.import" />
@@ -212,6 +212,7 @@ limitations under the License.
 
 
 	<Warning Text="UNRESOLVED: %(MissedReference.fullpath)" Condition="'%(MissedReference.fullpath)'!=''"/>
+  <Warning Text="$(OS)"/>
   </Target>
 
 </Project>
