@@ -41,7 +41,7 @@ limitations under the License.
 	<PropertyGroup>
 		<SNK Condition="'$(SNK)'==''">$(qptkernel)\default-content\qorpent.snk</SNK>
 		<MSBuildEmitSolution>1</MSBuildEmitSolution>
-		<OS Condition=" '$(OS)' == '' ">UNIX</OS>
+		<OS Condition=" '$(OS)' != 'Windows_NT' ">UNIX</OS>
 		<ApplicationIcon>$(qptkernel)\default-content\qorpent-dllicon.ico</ApplicationIcon>
 		<AssemblyOriginatorKeyFile>$(SNK)</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
@@ -212,7 +212,7 @@ limitations under the License.
 
 
 	<Warning Text="UNRESOLVED: %(MissedReference.fullpath)" Condition="'%(MissedReference.fullpath)'!=''"/>
-  <Warning Text="$(OS)"/>
+  <Warning Text="$(OS),  $(DefineConstants)"/>
   </Target>
 
 </Project>
