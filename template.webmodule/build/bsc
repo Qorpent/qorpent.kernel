@@ -1,7 +1,7 @@
 #!/bin/sh
 if [[ -n $( find ./src/bxls -name \*.bxls ) ]]; then
     echo BSC BUILD...
-    ../../.build/bin/all/bsc.exe build  --loglevel Warning $*
+    ../../.build/bin/all/bsc.exe build  --loglevel Warn $*
     echo OK
 else
     echo NO BXLS files to compile
