@@ -11,7 +11,8 @@ require.config({
         "angular": "../lib/angular",
         "teamcity": "../lib/teamcity",
         "angular-mocks": "../lib/angular-mocks",
-        "testmap": "../build/testmap"
+        "testmap": "../build/testmap",
+        "moment": "../lib/moment"
     },
 
     shim: {

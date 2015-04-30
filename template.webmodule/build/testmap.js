@@ -50,7 +50,10 @@ define(["package"],function(package) {
             package.tests.forEach(function(v){
                 if(typeof(v)==="string"){ //simple test reference
                     result.push(v);
-                } else {
+                }else if(!!v.config){
+                    require.config(v.config);
+                }
+                else {
                     if(!!v.condition){ //check conditions for given context
                         if(v.condition=="browser" && !profile.browser)return;
                         if(v.condition=="!browser" && !!profile.browser)return;
@@ -64,6 +67,9 @@ define(["package"],function(package) {
                             if(!(profile.context||"").match(new RegExp(v.condition)))return;
                         }
 
+                    }
+                    if(!!v.base){
+                        paths[v.name] = v.base+ v.name;
                     }
                     if(!!v.deps){ // если определены зависимости
                         var names = [];
@@ -106,10 +112,10 @@ define(["package"],function(package) {
                 }
             });
         }
+
         require.config({
             paths: paths
         });
-
         return result;
     }
 });

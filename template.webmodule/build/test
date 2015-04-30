@@ -9,7 +9,7 @@ fi
 if [ "$1" == "full" ] || [ "$2" == "full"  ]; then
     FILTER=""
 fi
-if [[ -n $( find ./tests -name \*.js ) ]]; then
+if [[ -n $( find ./tests -name \*.js ) || -n $( find ./src/js -name \*test\*.js ) ]]; then
     echo $MESSAGE
     cd build
     ${CALL} | grep -E "${FILTER}"
