@@ -1,17 +1,17 @@
 /**
-/**
+ /**
  * Created by comdiv on 17.11.2014.
  */
 var myModule = ""; // set module manually if automatic response from HREF is not valid
 
-var useThe = false; //set to true if module uses THE library
-var useTotalLeaflet = false; //set to true if module uses TOTALLEAFLET
+var useThe = true; //set to true if module uses THE library
+var useTotalLeaflet = true; //set to true if module uses TOTALLEAFLET
 var useUiBootstrap = false; //set to true if module uses UIBOOTSTRAP
 var useAllPerformance = false; //set to true to load all useBindonce, useScalyr, useReact
 var useBindonce = useAllPerformance || false; // set to true to load bindonce 
 var useScalyr = useAllPerformance || false; // set to true to load scalyr
-var useReact = useAllPerformance || false; 
-
+var useReact = useAllPerformance || false;
+var useDatetimePicker = true;
 
 
 if (!myModule) {
@@ -56,35 +56,34 @@ if (document.location.href.match(/src/)) {
 
 var config = {
     baseUrl: base,
-    paths: {
-       
-    },
     deps: [myModule],
-    shim : {},
+    paths:{},
+    shim:{},
     callback: function () {
 
         var deps = [];
         deps.push(myModule);
-		
+
         if (useThe) {
             deps.push("the-all");
         }
         if (useUiBootstrap) {
             deps.push("ui.bootstrap");
         }
-		
-		if(useBindonce){
-			 deps.push("pasvaz.bindonce");
-		}
-		if(useScalyr){
-			 deps.push("sly");
-		}
+
+        if(useBindonce){
+            deps.push("pasvaz.bindonce");
+        }
+        if(useScalyr){
+            deps.push("sly");
+        }
+
         if(useReact){
             require(["react"],function(r){
                 window.React = r;
             });
         }
-		
+
         // bind additional Angular modules for bootstrap here
         angular.bootstrap(document, deps);
     }
@@ -92,18 +91,22 @@ var config = {
 config.paths[myModule] = main;
 config.shim[myModule] = {deps: ["angular"]};
 if(useBindonce){
-	config.shim["bindonce"] = {deps: ["angular"]};
-	config.shim[myModule].deps.push("bindonce");
+    config.shim["bindonce"] = {deps: ["angular"]};
+    config.shim[myModule].deps.push("bindonce");
 }
 if(useScalyr){
-	config.shim["scalyr"] = {deps: ["angular"]};
-	config.shim[myModule].deps.push("scalyr");
+    config.shim["scalyr"] = {deps: ["angular"]};
+    config.shim[myModule].deps.push("scalyr");
 }
 if(useReact){
-	config.shim["react"] = {deps: ["angular"]};
-	config.shim[myModule].deps.push("react");
+    config.shim["react"] = {deps: ["angular"]};
+    config.shim[myModule].deps.push("react");
 }
-
+if(useDatetimePicker){
+    config.paths.datetimepicker = "jquery.datetimepicker";
+    config.shim["datetimepicker"] = {deps: ["jquery"]};
+    config.shim[myModule].deps.push("datetimepicker");
+}
 
 if (useUiBootstrap || useThe) {
     config.shim["ui-bootstrap"] = {deps: ["angular", "jquery"]};
