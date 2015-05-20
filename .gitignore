@@ -28,3 +28,8 @@ TestResults
 /template.webmodule/dist/js/textAngular-sanitize.js
 /template.webmodule/dist/js/textAngular.js
 /template.webmodule/dist/js/ui-bootstrap.js
+/template.webmodule/dist/css/bootstrap.css
+/template.webmodule/dist/css/jquery.datetimepicker.css
+/template.webmodule/dist/css/mocha.css
+/template.webmodule/dist/js/angular-sanitize.min.js
+/template.webmodule/dist/js/jquery.datetimepicker.js

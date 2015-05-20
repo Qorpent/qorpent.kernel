@@ -71,3 +71,4 @@ fi
 ./hooks/afterbuild ${args}
 
 cp ./lib/*.js ./dist/js
+cp ./lib/*.css ./dist/css
