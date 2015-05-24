@@ -17,7 +17,7 @@ http_images_dir = "img"
 http_fonts_dir = "fonts"
 http_stylesheets_path = "/css"
 http_javascripts_path = "/js"
-
+Encoding.default_external = "utf-8"
 
 # we have fixed structure inside module, but it must can be supplyed to other root
 relative_assets = true
