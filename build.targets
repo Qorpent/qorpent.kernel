@@ -131,13 +131,13 @@ limitations under the License.
 <DefineConstants Condition="$(QISD)">$(DefineConstants);PARANOID</DefineConstants>
 
 </PropertyGroup>
-  <Target Name="BeforeBuild">
+  <Target Name="BeforeBuild"  Condition=" '$(OS)' == 'Windows_NT' " >
 	
 	<MakeDir Directories="$(TmpPath)" />
 	<Copy SourceFiles="$(qptkernel)\default-content\Auto_AssemblyInfo.cs" DestinationFiles="$(TmpPath)\$(AssemblyName)_VersionInfo.cs" SkipUnchangedFiles="True" />
 	<Copy SourceFiles="..\manifest" DestinationFiles="$(TmpPath)\$(PackageCode).pkg-manifest" Condition="$(PackageManifestExists)"/>
 
-	<FileUpdate Files="$(TmpPath)\$(AssemblyName)_VersionInfo.cs" Regex="@ASSEMBLYNAME@" ReplacementText="$(AssemblyName)" />
+	<FileUpdate  Files="$(TmpPath)\$(AssemblyName)_VersionInfo.cs" Regex="@ASSEMBLYNAME@" ReplacementText="$(AssemblyName)" />
 	<FileUpdate Files="$(TmpPath)\$(AssemblyName)_VersionInfo.cs" Regex="@CONFIGURATION@" ReplacementText="$(Configuration)" />
 	<FileUpdate Files="$(TmpPath)\$(AssemblyName)_VersionInfo.cs" Regex="@VERSION@" ReplacementText="$(MainVersion).$(MinorVersion).$(Revision).$(BuildNumber)" />
     <MakeDir Directories="$(BinPath)" />
