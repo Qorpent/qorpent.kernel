@@ -51,9 +51,11 @@ var readfiles = function(){
 
 var preprocess = function (content) {
     var result = content;
-    result = result.replace(/<!--include\s+([^-]+)-->/g, function (match, name) {
-        return readinclude(name);
-    });
+    if(!!result) {
+        result = result.replace(/<!--include\s+([^-]+)-->/g, function (match, name) {
+            return readinclude(name);
+        });
+    }
 
     return result;
 }
