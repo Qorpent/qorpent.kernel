@@ -1,5 +1,5 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<!-- BUILD FILE OF @PACKAGE@ QORPENT PACKAGE -->
+	<!-- BUILD FILE OF bit.cross QORPENT PACKAGE -->
 	
 	<!--
 	DO NOT CHANGE THIS FILE WITHOUT SERIOUS REASON
@@ -36,12 +36,12 @@
 		<CsTestProjectSuffix Condition="'$(CsTestProjectSuffix)'==''">.Tests</CsTestProjectSuffix>
 		<ProjectProperties Condition="'$(ProjectProperties)'==''">NoProjRef=True</ProjectProperties>
 		<WarnProjectIgnorance Condition="'$(WarnProjectIgnorance)'==''">True</WarnProjectIgnorance>
-		<PackageName>@PACKAGE@</PackageName>
+		<PackageName>bit.cross</PackageName>
 	</PropertyGroup>
 	
 	<ItemGroup>
 		<PreProject Include=".\**\*pre-build" />
-		<MainProject Include=".\**\*.build;.\*\**\build;.\**\*.csproj" Exclude=".\**\*$(CsTestProjectSuffix).csproj" />
+		<MainProject Include=".\**\*.build;.\*\**\build;.\**\*.csproj" Exclude=".\**\*$(CsTestProjectSuffix).csproj;.\*.webmodule\build\build" />
 		<TestProject Include=".\**\*$(CsTestProjectSuffix).csproj" />
 		<PostProject Include=".\**\*post-build" />
 	</ItemGroup>

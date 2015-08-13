@@ -5,17 +5,20 @@ using System.Drawing.Imaging;
 
 namespace qorpent.embed {
     /// <summary>
-    /// 
     /// </summary>
     public static class ImageUtils {
-        public static void ConvertImage(string source, string target, int canvasWidth=-1, int canvasHeight=-1) {
+        public static void ConvertImage(string source, string target, int canvasWidth = -1, int canvasHeight = -1) {
             var image = Image.FromFile(source);
             if (canvasHeight == -1 && canvasHeight == -1) {
-                image.Save(target,ImageFormat.Png);
+                image.Save(target, ImageFormat.Png);
                 return;
             }
-            if (canvasWidth == -1) canvasWidth = image.Width;
-            if (canvasHeight == -1) canvasHeight = image.Height;
+            if (canvasWidth == -1) {
+                canvasWidth = image.Width;
+            }
+            if (canvasHeight == -1) {
+                canvasHeight = image.Height;
+            }
 
             Image thumbnail =
                 new Bitmap(canvasWidth, canvasHeight); // changed parm names
@@ -50,11 +53,7 @@ namespace qorpent.embed {
 
             /* ------------- end new code ---------------- */
 
-            var info = ImageCodecInfo.GetImageEncoders();
-            EncoderParameters encoderParameters;
-            encoderParameters = new EncoderParameters(1);
-            encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality,
-                100L);
+
             thumbnail.Save(target, ImageFormat.Png);
             image.Dispose();
             thumbnail.Dispose();
