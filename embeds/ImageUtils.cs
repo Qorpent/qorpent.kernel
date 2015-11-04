@@ -7,6 +7,69 @@ namespace qorpent.embed {
     /// <summary>
     /// </summary>
     public static class ImageUtils {
+        public enum ImageType {
+            GrayScale = 1,
+            BGR = 2,
+            RGB = 4,
+            BGRA = 8,
+            RGBA = 16
+        }
+
+        private static int GetChannelCount(ImageType format) {
+            if (format == ImageType.GrayScale) {
+                return 1;
+            }
+            if (format == ImageType.BGR || format == ImageType.RGB) {
+                return 3;
+            }
+            return 4;
+        }
+
+        public static byte[] ConvertImageToBytes(Image image, ImageType format = ImageType.RGB) {
+            var channels = GetChannelCount(format);
+            var bluefirst = format == ImageType.BGR || format == ImageType.BGRA;
+            var size = image.Width*image.Height*channels;
+            var result = new byte[size];
+            var bitmap = new Bitmap(image);
+            var i = -1;
+            for (var r = 0; r < image.Height; r++) {
+                for (var c = 0; c < image.Width; c++) {
+                    var pixel = bitmap.GetPixel(c, r);
+                    if (channels == 1 && ((pixel.R != pixel.G) || (pixel.R != pixel.B))) {
+                        pixel = GetGrayscale(pixel);
+                    }
+                    if (channels == 1) {
+                        result[++i] = pixel.R;
+                    }
+                    else {
+                        if (bluefirst) {
+                            result[++i] = pixel.B;
+                        }
+                        else {
+                            result[++i] = pixel.R;
+                        }
+                        result[++i] = pixel.G;
+                        if (bluefirst) {
+                            result[++i] = pixel.R;
+                        }
+                        else {
+                            result[++i] = pixel.B;
+                        }
+                        if (channels == 4) {
+                            result[++i] = pixel.A;
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private static Color GetGrayscale(Color pixel) {
+            var grayScale = (int) ((pixel.R*0.3) + (pixel.G*0.59) + (pixel.B*0.11));
+            return Color.FromArgb(grayScale, 0, 0);
+        }
+
         public static void ConvertImage(string source, string target, int canvasWidth = -1, int canvasHeight = -1) {
             var image = Image.FromFile(source);
             if (canvasHeight == -1 && canvasHeight == -1) {
