@@ -24,10 +24,54 @@ namespace qorpent.embed {
             }
             return 4;
         }
+        /// <summary>
+        /// Converts byte buffer to Image with given bitmap type
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static Image ConvertBytesToImage(byte[] data, int w, int h, ImageType type = ImageType.RGB) {
+            var bitmap = new Bitmap(w,h);
+            var channels = GetChannelCount(type);
+            var bluefirst = type == ImageType.BGR || type == ImageType.BGRA;
+            var size = w * h * channels;
+            if (data.Length < size) {
+                throw new Exception("invalid buffer size");
+            }
+            var i = -1;
+            for (var r = 0; r < h; r++) {
+                for (var c = 0; c < w; c++) {
+                    if (channels == 1) {
+                        int gray = data[++i];
+                        bitmap.SetPixel(c, r, Color.FromArgb(gray, gray, gray));
+                    }
+                    else {
+                        var buf = new[] {data[++i], data[++i], data[++i], channels == 4 ? data[++i] : (byte)0};
+                        var basecolor = Color.FromArgb(bluefirst?buf[2]:buf[0],buf[1],bluefirst?buf[0]:buf[2]);
+                        if (channels == 4) {
+                            bitmap.SetPixel(c, r, Color.FromArgb(buf[3], basecolor));
+                        }
+                        else {
+                            bitmap.SetPixel(c,r,basecolor);
+                        }
+                    }
+                }
+            }
+            return bitmap;
+        }
 
-        public static byte[] ConvertImageToBytes(Image image, ImageType format = ImageType.RGB) {
-            var channels = GetChannelCount(format);
-            var bluefirst = format == ImageType.BGR || format == ImageType.BGRA;
+
+        /// <summary>
+        /// Converts given image to plain byte (uchar*) array 
+        /// </summary>
+        /// <param name="image">source image</param>
+        /// <param name="type">type of image byte encoding (according to OpenCV)</param>
+        /// <returns></returns>
+        public static byte[] ConvertImageToBytes(Image image, ImageType type = ImageType.RGB) {
+            var channels = GetChannelCount(type);
+            var bluefirst = type == ImageType.BGR || type == ImageType.BGRA;
             var size = image.Width*image.Height*channels;
             var result = new byte[size];
             var bitmap = new Bitmap(image);
