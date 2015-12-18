@@ -4,6 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
 namespace qorpent.embed {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     /// <summary>
     /// </summary>
     public static class ImageUtils {
@@ -167,3 +168,4 @@ namespace qorpent.embed {
         }
     }
 }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

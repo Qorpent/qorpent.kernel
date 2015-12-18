@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace qorpent.embed {
     /// <summary>
     ///     Intermediate buffer to be used as out string parameter in interop scenario
@@ -25,7 +25,8 @@ namespace qorpent.embed {
     ///     }
     /// </example>
     public class OutStringBuffer : IDisposable {
-        // it must be disposal while it allocates unmanaged memory
+
+                              // it must be disposal while it allocates unmanaged memory
 
         public const int ANSI_SIZE = 1;
         public const int UTF16_SIZE = 2;
@@ -144,3 +145,4 @@ namespace qorpent.embed {
         }
     }
 }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

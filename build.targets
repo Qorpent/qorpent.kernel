@@ -34,7 +34,7 @@ limitations under the License.
 		<TestBinPath>$(BinPath)\tests</TestBinPath>
 		<SqlTestBinPath>$(SqlBinPath)\tests</SqlTestBinPath>
 		<SqlToolBinPath>$(SqlBinPath)\tools</SqlToolBinPath>
-		<AllReleasePath>$(BinPath)\release</AllReleasePath>
+		<AllReleasePath Condition="'$(AllReleasePath)'==''">$(BinPath)\release</AllReleasePath>
 		<CommonsPath>$(qptkernel)</CommonsPath>
 	</PropertyGroup>
 	<Import Project="$(qptkernel)\MSBuild.Community.Tasks.Targets" />	
